@@ -1,0 +1,18 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# Variables de entorno
+.env
+
+# VS Code
+.vscode/
+
+# Node / Vue
+node_modules/
+dist/
+
+# Sistema
+.DS_Store
+Thumbs.db
