@@ -35,4 +35,18 @@ def create_app():
             "message": "Backend SGAD funcionando"
         }
 
+    @app.get("/api/db-test")
+    def db_test():
+        try:
+            with db.engine.connect():
+                return {
+                    "status": "ok",
+                    "message": "Conexion con PostgreSQL exitosa"
+                }
+        except Exception as error:
+            return {
+                "status": "error",
+                "message": str(error)
+            }, 500
+
     return app
