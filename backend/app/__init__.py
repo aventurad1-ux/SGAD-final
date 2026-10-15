@@ -53,7 +53,9 @@ def create_app():
             }, 500
         
     from app.routes.auth import auth_bp
+    from app.routes.test_permissions import test_permissions_bp
 
     app.register_blueprint(auth_bp)
+    app.register_blueprint(test_permissions_bp)
 
     return app
