@@ -73,5 +73,11 @@ class Usuario(db.Model):
         cascade="all, delete-orphan"
     )
 
+    refresh_tokens = db.relationship(
+        "RefreshToken",
+        back_populates="usuario",
+        cascade="all, delete-orphan"
+    )
+
     def __repr__(self):
         return f"<Usuario {self.correo}>"
