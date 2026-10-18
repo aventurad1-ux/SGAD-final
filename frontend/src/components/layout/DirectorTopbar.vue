@@ -48,16 +48,16 @@
         type="button"
       >
         <div class="profile-avatar">
-          ME
+           {{ iniciales }}
         </div>
 
         <div class="profile-text">
           <strong>
-            María Eugenia Morales Soto
+             {{ nombreUsuario }}
           </strong>
 
           <span>
-            Directora
+             {{ rolUsuario }}
           </span>
         </div>
       </button>
@@ -71,8 +71,47 @@ export default {
 
   data() {
     return {
-      cicloSeleccionado: "2026"
+      cicloSeleccionado: "2026",
+      nombreUsuario: "",
+      rolUsuario: "",
+      iniciales: ""
     };
+  },
+
+  mounted() {
+    const usuarioGuardado =
+      localStorage.getItem("usuario");
+
+    if (usuarioGuardado) {
+      try {
+        const usuario =
+          JSON.parse(usuarioGuardado);
+
+        const nombres =
+          usuario.nombres || "";
+
+        const apellidos =
+          usuario.apellidos || "";
+
+        this.nombreUsuario =
+          `${nombres} ${apellidos}`.trim();
+
+        this.rolUsuario =
+          usuario.rol || "";
+        
+        this.iniciales =
+          `${nombres.charAt(0)}${apellidos.charAt(0)}`
+            .toUpperCase();
+
+      } catch {
+        this.nombreUsuario =
+          "Usuario";
+        this.rolUsuario =
+          "";
+        this.iniciales =
+          "U";
+      }
+    }
   }
 };
 </script>

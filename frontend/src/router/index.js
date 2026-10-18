@@ -12,13 +12,49 @@ const routes = [
   {
     path: "/directora/dashboard",
     name: "directora-dashboard",
-    component: DashboardView
+    component: DashboardView,
+    meta: {
+      requiresAuth: true,
+      role: "Directora"
+    }
   }
 ];
 
 const router = createRouter({
   history: createWebHistory(),
   routes
+});
+
+router.beforeEach((to) => {
+  const accessToken = localStorage.getItem("access_token");
+  const usuarioGuardado = localStorage.getItem("usuario");
+
+  let usuario = null;
+
+  if (usuarioGuardado) {
+    try {
+      usuario = JSON.parse(usuarioGuardado);
+    } catch {
+      usuario = null;
+    }
+  }
+
+  if (to.meta.requiresAuth && !accessToken) {
+    return "/";
+  }
+
+  if (
+    to.meta.role &&
+    (!usuario || usuario.rol !== to.meta.role)
+  ) {
+    return "/";
+  }
+
+  if (to.path === "/" && accessToken && usuario) {
+    if (usuario.rol === "Directora") {
+      return "/directora/dashboard";
+    }
+  }
 });
 
 export default router;
