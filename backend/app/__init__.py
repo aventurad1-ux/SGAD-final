@@ -2,6 +2,7 @@ from flask import Flask
 
 from config.config import Config
 from app.extensions import db, migrate, cors, jwt
+from app.routes.review_inbox import review_inbox_bp
 
 
 def create_app():
@@ -57,5 +58,6 @@ def create_app():
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(test_permissions_bp)
+    app.register_blueprint(review_inbox_bp)
 
     return app
