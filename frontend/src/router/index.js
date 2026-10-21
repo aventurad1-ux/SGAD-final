@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import LoginView from "../views/auth/LoginView.vue";
 import DashboardView from "../views/directora/DashboardView.vue";
 import ReviewInboxView from "../views/directora/ReviewInboxView.vue";
+import RequestsView from "../views/directora/RequestsView.vue";
 
 const routes = [
   {
@@ -23,6 +24,15 @@ const routes = [
     path: "/directora/revision",
     name: "directora-revision",
     component: ReviewInboxView,
+    meta: {
+    requiresAuth: true,
+    role: "Directora"
+  }
+},
+{
+    path: "/directora/solicitudes",
+    name: "directora-solicitudes",
+    component: RequestsView,
     meta: {
     requiresAuth: true,
     role: "Directora"

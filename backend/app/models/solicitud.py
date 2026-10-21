@@ -19,6 +19,13 @@ class Solicitud(db.Model):
         nullable=False
     )
 
+    categoria = db.Column(
+        db.String(80),
+        nullable=False,
+        default="Evidencias docentes",
+        server_default="Evidencias docentes",
+    )
+
     id_usuario_creador = db.Column(
         db.Integer,
         db.ForeignKey(

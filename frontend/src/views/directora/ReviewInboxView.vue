@@ -35,28 +35,20 @@
                 Todos los estados
               </option>
 
-              <option value="pendiente">
-                Pendiente
-              </option>
-
               <option value="entregado">
-                Entregado
+                Recibido
               </option>
 
               <option value="en_revision">
                 En revisión
               </option>
 
-              <option value="correccion_solicitada">
-                Corrección solicitada
-              </option>
-
               <option value="aprobado">
                 Aprobado
               </option>
 
-              <option value="rechazado">
-                Rechazado
+              <option value="correccion_solicitada">
+                Corrección solicitada
               </option>
             </select>
 
@@ -545,7 +537,7 @@ export default {
     estadoTexto(estado) {
       const estados = {
         pendiente: "Pendiente",
-        entregado: "Entregado",
+        entregado: "Recibido",
         en_revision: "En revisión",
         correccion_solicitada:
           "Corrección solicitada",
