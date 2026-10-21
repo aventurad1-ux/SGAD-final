@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 
 import LoginView from "../views/auth/LoginView.vue";
 import DashboardView from "../views/directora/DashboardView.vue";
+import ReviewInboxView from "../views/directora/ReviewInboxView.vue";
 
 const routes = [
   {
@@ -17,7 +18,17 @@ const routes = [
       requiresAuth: true,
       role: "Directora"
     }
+  },
+  {
+    path: "/directora/revision",
+    name: "directora-revision",
+    component: ReviewInboxView,
+    meta: {
+    requiresAuth: true,
+    role: "Directora"
   }
+}
+
 ];
 
 const router = createRouter({

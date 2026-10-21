@@ -31,11 +31,20 @@
         <span class="menu-text">Panel general</span>
       </RouterLink>
 
-      <a class="menu-item" href="#">
-        <span class="menu-icon">✓</span>
-        <span class="menu-text">Bandeja de revisión</span>
-        <span class="menu-count">1</span>
-      </a>
+      <RouterLink
+       to="/directora/revision"
+       class="menu-item"
+       >
+       <span class="menu-icon">✓</span>
+
+       <span class="menu-text">
+         Bandeja de revisión
+       </span>
+
+       <span class="menu-count">
+       1
+       </span>
+       </RouterLink>
 
       <a class="menu-item" href="#">
         <span class="menu-icon">▤</span>
