@@ -4,6 +4,7 @@ import LoginView from "../views/auth/LoginView.vue";
 import DashboardView from "../views/directora/DashboardView.vue";
 import ReviewInboxView from "../views/directora/ReviewInboxView.vue";
 import RequestsView from "../views/directora/RequestsView.vue";
+import ExpedientesView from "../views/directora/ExpedientesView.vue";
 
 const routes = [
   {
@@ -37,7 +38,16 @@ const routes = [
     requiresAuth: true,
     role: "Directora"
   }
-}
+},
+{
+    path: "/directora/expedientes",
+    name: "directora-expedientes",
+    component: ExpedientesView,
+    meta: {
+      requiresAuth: true,
+      role: "Directora"
+    }
+  }
 
 ];
 

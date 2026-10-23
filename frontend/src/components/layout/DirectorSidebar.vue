@@ -1,6 +1,5 @@
 <template>
   <aside class="director-sidebar">
-    <!-- Logo / identidad -->
     <div class="sidebar-brand">
       <img
         src="../../assets/images/logo.jpeg"
@@ -19,7 +18,6 @@
       DIRECCIÓN GENERAL
     </div>
 
-    <!-- Navegación -->
     <nav class="sidebar-menu">
       <p class="menu-section">
         Principal
@@ -52,8 +50,8 @@
       </RouterLink>
 
       <a
-        class="menu-item"
         href="#"
+        class="menu-item"
       >
         <span class="menu-icon">▤</span>
 
@@ -66,29 +64,25 @@
         Gestión escolar
       </p>
 
-      <a
+      <RouterLink
+        to="/directora/expedientes"
         class="menu-item"
-        href="#"
       >
         <span class="menu-icon">⊙</span>
 
         <span class="menu-text">
-          Matrículas y expedientes
+          Expedientes
         </span>
-
-        <span class="menu-count">
-          11
-        </span>
-      </a>
+      </RouterLink>
 
       <a
-        class="menu-item"
         href="#"
+        class="menu-item"
       >
         <span class="menu-icon">▱</span>
 
         <span class="menu-text">
-          Ciclos, grados y secciones
+          Ciclo escolar
         </span>
       </a>
 
@@ -112,8 +106,8 @@
       </p>
 
       <a
-        class="menu-item"
         href="#"
+        class="menu-item"
       >
         <span class="menu-icon">♟</span>
 
@@ -123,8 +117,8 @@
       </a>
 
       <a
-        class="menu-item"
         href="#"
+        class="menu-item"
       >
         <span class="menu-icon">▥</span>
 
@@ -134,8 +128,8 @@
       </a>
 
       <a
-        class="menu-item"
         href="#"
+        class="menu-item"
       >
         <span class="menu-icon">♻</span>
 
@@ -149,8 +143,8 @@
       </p>
 
       <a
-        class="menu-item"
         href="#"
+        class="menu-item"
       >
         <span class="menu-icon">▥</span>
 
@@ -160,8 +154,8 @@
       </a>
 
       <a
-        class="menu-item"
         href="#"
+        class="menu-item"
       >
         <span class="menu-icon">☷</span>
 
@@ -171,11 +165,10 @@
       </a>
     </nav>
 
-    <!-- Cerrar sesión -->
     <div class="sidebar-footer">
       <button
-        class="logout-button"
         type="button"
+        class="logout-button"
         @click="cerrarSesion"
       >
         Cerrar sesión
@@ -196,9 +189,17 @@ export default {
 
   methods: {
     cerrarSesion() {
-      localStorage.removeItem("access_token");
-      localStorage.removeItem("refresh_token");
-      localStorage.removeItem("usuario");
+      localStorage.removeItem(
+        "access_token"
+      );
+
+      localStorage.removeItem(
+        "refresh_token"
+      );
+
+      localStorage.removeItem(
+        "usuario"
+      );
 
       this.$router.push("/");
     }

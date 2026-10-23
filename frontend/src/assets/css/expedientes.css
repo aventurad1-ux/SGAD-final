@@ -1,0 +1,1003 @@
+/* =====================================================
+   EXPEDIENTES
+   ===================================================== */
+
+.records-page-head,
+.records-students-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 24px;
+
+  margin-bottom: 27px;
+}
+
+.records-eyebrow {
+  margin: 0 0 3px;
+
+  color: #617c91;
+
+  font-size: 0.94rem;
+  font-weight: 900;
+
+  letter-spacing: 0.17em;
+
+  text-transform: uppercase;
+}
+
+.records-page-head h1,
+.records-students-head h1 {
+  margin: 0;
+
+  color: #064d7b;
+
+  font-size: 2.65rem;
+  font-weight: 900;
+
+  line-height: 1.05;
+}
+
+.records-subtitle {
+  margin: 8px 0 0;
+
+  color: #637e94;
+
+  font-size: 1.02rem;
+}
+
+.records-new-button {
+  min-width: 160px;
+}
+
+.records-back-button {
+  min-height: 46px;
+
+  padding-left: 18px;
+  padding-right: 18px;
+}
+
+
+/* =====================================================
+   BOTONES
+   ===================================================== */
+
+.records-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 40px;
+
+  padding: 8px 14px;
+
+  border-radius: 10px;
+
+  font-family: inherit;
+  font-size: 0.86rem;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.records-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.records-btn:disabled {
+  opacity: 0.62;
+
+  cursor: not-allowed;
+}
+
+.records-btn-primary {
+  border: 1px solid #064d7b;
+
+  background: #064d7b;
+
+  color: #ffffff;
+
+  box-shadow:
+    0 8px 19px
+    rgba(5, 73, 116, 0.18);
+}
+
+.records-btn-primary:hover:not(:disabled) {
+  background: #053f67;
+}
+
+.records-btn-secondary {
+  border: 1px solid #b9d7e6;
+
+  background: #ffffff;
+
+  color: #064d7b;
+}
+
+.records-btn-soft {
+  border: 1px solid #b8e7f4;
+
+  background: #effafe;
+
+  color: #006e9e;
+}
+
+.records-btn-soft:hover:not(:disabled) {
+  background: #e2f7fd;
+}
+
+.records-btn-sm {
+  min-height: 36px;
+
+  padding: 6px 12px;
+
+  border-radius: 9px;
+
+  font-size: 0.8rem;
+}
+
+
+/* =====================================================
+   TARJETAS DE SECCIONES
+   ===================================================== */
+
+.records-section-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 18px;
+}
+
+.records-section-card {
+  min-height: 232px;
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 21px 20px 20px;
+
+  border: 1px solid #d8e5ec;
+  border-left: 4px solid #16b6de;
+  border-radius: 17px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 8px 20px
+    rgba(18, 65, 93, 0.07);
+}
+
+.records-section-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 18px;
+}
+
+.records-card-eyebrow {
+  margin: 0 0 8px;
+
+  color: #00719f;
+
+  font-size: 0.72rem;
+  font-weight: 900;
+
+  letter-spacing: 0.17em;
+
+  text-transform: uppercase;
+}
+
+.records-section-card h2 {
+  margin: 0;
+
+  color: #064d7b;
+
+  font-size: 1.42rem;
+  font-weight: 900;
+
+  line-height: 1.15;
+}
+
+.records-section-count {
+  color: #00719f;
+
+  font-size: 1.95rem;
+  font-weight: 900;
+
+  line-height: 1;
+}
+
+.records-section-teacher {
+  min-height: 52px;
+
+  margin: 32px 0 0;
+
+  color: #637e94;
+
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.records-section-teacher strong {
+  color: #526f84;
+
+  font-weight: 800;
+}
+
+.records-section-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+
+  margin-top: auto;
+  padding-top: 14px;
+
+  border-top: 1px solid #d7e4eb;
+}
+
+
+/* =====================================================
+   BADGES
+   ===================================================== */
+
+.records-badge {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 6px 10px;
+
+  border-radius: 999px;
+
+  font-size: 0.72rem;
+  font-weight: 800;
+
+  white-space: nowrap;
+}
+
+.records-badge-success {
+  background: #dbf6e9;
+
+  color: #008563;
+}
+
+.records-badge-warning {
+  background: #fff0cf;
+
+  color: #9b5900;
+}
+
+
+/* =====================================================
+   ESTUDIANTES DE SECCIÓN
+   ===================================================== */
+
+.records-section-summary {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  column-gap: 20px;
+
+  margin-bottom: 20px;
+
+  padding: 23px 22px;
+
+  border: 1px solid #d8e5ec;
+  border-radius: 17px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 6px 18px
+    rgba(18, 65, 93, 0.06);
+}
+
+.records-summary-item {
+  min-height: 63px;
+
+  padding: 10px 0 12px;
+
+  border-bottom:
+    1px dashed #d5e2e9;
+}
+
+.records-summary-item span {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: #60798d;
+
+  font-size: 0.69rem;
+  font-weight: 900;
+
+  letter-spacing: 0.08em;
+
+  text-transform: uppercase;
+}
+
+.records-summary-item strong {
+  display: block;
+
+  color: #062f4f;
+
+  font-size: 0.9rem;
+  font-weight: 900;
+}
+
+
+/* =====================================================
+   FILTROS
+   ===================================================== */
+
+.records-students-toolbar {
+  display: grid;
+
+  grid-template-columns:
+    minmax(260px, 1fr)
+    minmax(185px, 220px);
+
+  gap: 11px;
+
+  margin-bottom: 19px;
+
+  padding: 14px;
+
+  border: 1px solid #d8e5ec;
+  border-radius: 17px;
+
+  background: #ffffff;
+}
+
+.records-input {
+  width: 100%;
+  min-height: 49px;
+
+  padding: 11px 14px;
+
+  border: 1px solid #bfd4e0;
+  border-radius: 11px;
+
+  background: #ffffff;
+
+  color: #173b54;
+
+  font-family: inherit;
+  font-size: 0.92rem;
+
+  outline: none;
+}
+
+.records-input:focus {
+  border-color: #16b6de;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(22, 182, 222, 0.11);
+}
+
+.records-input:disabled {
+  background: #f5f8fa;
+
+  color: #58738a;
+}
+
+textarea.records-input {
+  min-height: 96px;
+
+  resize: vertical;
+}
+
+
+/* =====================================================
+   TABLA
+   ===================================================== */
+
+.records-table-card {
+  overflow: hidden;
+
+  border: 1px solid #d8e5ec;
+  border-radius: 17px;
+
+  background: #ffffff;
+}
+
+.records-table-wrap {
+  overflow-x: auto;
+}
+
+.records-table-wrap table {
+  width: 100%;
+
+  min-width: 760px;
+
+  border-collapse: collapse;
+}
+
+.records-table-wrap th {
+  padding: 13px 16px;
+
+  border-bottom:
+    1px solid #d8e5ec;
+
+  background: #f3f9fc;
+
+  color: #58738a;
+
+  font-size: 0.68rem;
+  font-weight: 900;
+
+  letter-spacing: 0.07em;
+
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.records-table-wrap td {
+  padding: 16px;
+
+  border-bottom:
+    1px solid #e6eef2;
+
+  color: #163b55;
+
+  font-size: 0.88rem;
+
+  vertical-align: middle;
+}
+
+.records-cell-title {
+  color: #062f4f;
+
+  font-weight: 900;
+}
+
+.records-code {
+  font-weight: 500;
+}
+
+.records-cell-sub {
+  margin-top: 4px;
+
+  color: #698296;
+
+  font-size: 0.76rem;
+}
+
+.records-table-empty {
+  padding: 34px !important;
+
+  color: #698296 !important;
+
+  text-align: center;
+}
+
+
+/* =====================================================
+   ALERTAS
+   ===================================================== */
+
+.records-alert {
+  margin-bottom: 18px;
+
+  padding: 13px 15px;
+
+  border-radius: 11px;
+
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.records-alert-success {
+  background: #dbf6e9;
+
+  color: #008563;
+}
+
+.records-alert-error {
+  background: #ffe7e5;
+
+  color: #b74747;
+}
+
+.records-info {
+  margin-bottom: 18px;
+
+  padding: 13px 15px;
+
+  border: 1px solid #bce8f4;
+  border-radius: 11px;
+
+  background: #effafe;
+
+  color: #08749d;
+
+  font-size: 0.83rem;
+}
+
+.records-muted {
+  color: #698296;
+
+  font-size: 0.77rem;
+}
+
+.records-empty {
+  grid-column: 1 / -1;
+
+  padding: 40px;
+
+  border: 1px solid #d8e5ec;
+  border-radius: 17px;
+
+  background: #ffffff;
+
+  color: #698296;
+
+  text-align: center;
+}
+
+
+/* =====================================================
+   MODALES
+   ===================================================== */
+
+.records-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 2000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 18px;
+
+  background:
+    rgba(5, 40, 65, 0.70);
+
+  backdrop-filter: blur(4px);
+}
+
+.records-overlay-front {
+  z-index: 2100;
+}
+
+.records-modal {
+  width: 100%;
+
+  max-height:
+    calc(100vh - 36px);
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+
+  border-radius: 21px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 24px 75px
+    rgba(4, 31, 50, 0.35);
+}
+
+.records-modal-lg {
+  max-width: 920px;
+}
+
+.records-modal-xl {
+  max-width: 1040px;
+}
+
+.records-modal-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 21px 25px 18px;
+
+  border-bottom:
+    1px solid #d8e5ec;
+}
+
+.records-modal-head p {
+  margin: 0 0 5px;
+
+  color: #05729f;
+
+  font-size: 0.70rem;
+  font-weight: 900;
+
+  letter-spacing: 0.13em;
+
+  text-transform: uppercase;
+}
+
+.records-modal-head h2 {
+  margin: 0;
+
+  color: #0b4e7a;
+
+  font-size: 1.72rem;
+  font-weight: 900;
+}
+
+.records-close {
+  width: 36px;
+  height: 36px;
+
+  border: 0;
+  border-radius: 50%;
+
+  background: transparent;
+
+  color: #637e94;
+
+  font-size: 1.45rem;
+
+  cursor: pointer;
+}
+
+.records-close:hover {
+  background: #f1f6f9;
+}
+
+.records-modal-body {
+  flex: 1;
+
+  overflow-y: auto;
+
+  padding: 22px 25px;
+}
+
+.records-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+
+  gap: 10px;
+
+  padding: 16px 25px 20px;
+
+  border-top:
+    1px solid #d8e5ec;
+
+  background: #fbfdfe;
+}
+
+
+/* =====================================================
+   VER EXPEDIENTE
+   ===================================================== */
+
+.records-file-body {
+  padding-top: 20px;
+}
+
+.records-expedient-detail {
+  margin-bottom: 0;
+}
+
+.records-detail-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  column-gap: 20px;
+}
+
+.records-detail-item {
+  padding: 10px 0 12px;
+
+  border-bottom:
+    1px dashed #d4e2e9;
+}
+
+.records-detail-item label {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: #698296;
+
+  font-size: 0.69rem;
+  font-weight: 900;
+
+  letter-spacing: 0.06em;
+
+  text-transform: uppercase;
+}
+
+.records-detail-item strong {
+  display: block;
+
+  color: #153951;
+
+  font-size: 0.90rem;
+  font-weight: 900;
+}
+
+.records-list-title {
+  margin:
+    3px 0
+    16px;
+
+  color: #0b4e7a;
+
+  font-size: 1.18rem;
+  font-weight: 900;
+}
+
+
+/* =====================================================
+   LISTA DE DOCUMENTOS
+   ===================================================== */
+
+.records-requirements {
+  display: grid;
+
+  gap: 10px;
+}
+
+.records-requirement {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  min-height: 74px;
+
+  gap: 15px;
+
+  padding: 13px 14px;
+
+  border: 1px solid #d6e4eb;
+  border-radius: 13px;
+
+  background: #ffffff;
+}
+
+.records-requirement-main {
+  display: flex;
+  align-items: center;
+
+  min-width: 0;
+
+  gap: 12px;
+}
+
+.records-requirement-state {
+  width: 34px;
+  height: 34px;
+
+  display: grid;
+  place-items: center;
+
+  flex: 0 0 auto;
+
+  border-radius: 11px;
+
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+.records-requirement-state.ok {
+  background: #daf6eb;
+
+  color: #0b8c6a;
+}
+
+.records-requirement-state.missing {
+  background: #fff0cf;
+
+  color: #c27605;
+}
+
+.records-requirement h3 {
+  margin: 0;
+
+  color: #17384f;
+
+  font-size: 0.98rem;
+  font-weight: 900;
+}
+
+.records-requirement p {
+  margin: 4px 0 0;
+
+  color: #698296;
+
+  font-size: 0.79rem;
+
+  overflow-wrap: anywhere;
+}
+
+.records-requirement-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  flex-wrap: wrap;
+
+  gap: 8px;
+}
+
+.records-expedient-footer {
+  flex-shrink: 0;
+}
+
+
+/* =====================================================
+   AGREGAR DOCUMENTO
+   ===================================================== */
+
+.records-upload-modal {
+  max-width: 520px;
+}
+
+.records-student-notice {
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  margin-bottom: 19px;
+
+  padding: 13px 14px;
+
+  border: 1px solid #bde8f4;
+  border-radius: 12px;
+
+  background: #ecfaff;
+
+  color: #246078;
+
+  font-size: 0.84rem;
+}
+
+.records-student-notice strong {
+  color: #096184;
+}
+
+.records-info-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 16px;
+  height: 16px;
+
+  flex: 0 0 auto;
+
+  color: #08749d;
+
+  font-weight: 900;
+}
+
+.records-file-input {
+  padding: 9px 13px;
+}
+
+.records-observations {
+  min-height: 96px;
+}
+
+.records-file-help {
+  margin:
+    -3px 0
+    14px;
+
+  color: #718798;
+
+  font-size: 0.73rem;
+}
+
+
+/* =====================================================
+   FORMULARIOS
+   ===================================================== */
+
+.records-form-group {
+  margin-bottom: 17px;
+}
+
+.records-form-group label {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: #17384f;
+
+  font-size: 0.84rem;
+  font-weight: 900;
+}
+
+.records-form-group label.required::after {
+  content: " *";
+
+  color: #b74747;
+}
+
+.records-form-two {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 15px;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+
+@media (max-width: 1050px) {
+  .records-section-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .records-page-head,
+  .records-students-head {
+    flex-direction: column;
+  }
+
+  .records-page-head h1,
+  .records-students-head h1 {
+    font-size: 2rem;
+  }
+
+  .records-section-grid,
+  .records-section-summary,
+  .records-students-toolbar,
+  .records-detail-grid,
+  .records-form-two {
+    grid-template-columns: 1fr;
+  }
+
+  .records-section-foot {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .records-requirement {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .records-requirement-actions {
+    width: 100%;
+
+    justify-content: flex-start;
+  }
+
+  .records-overlay {
+    padding: 10px;
+  }
+
+  .records-modal-head,
+  .records-modal-body,
+  .records-modal-footer {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+}
