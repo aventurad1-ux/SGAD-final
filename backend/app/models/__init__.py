@@ -11,6 +11,12 @@ from .solicitud_requisito import SolicitudRequisito
 from .entrega import Entrega
 from .version_entrega import VersionEntrega
 from .revision_entrega import RevisionEntrega
+from .seccion import Seccion
+from .estudiante import Estudiante
+from .matricula import Matricula
+from .requisito_expediente import RequisitoExpediente
+from .documento_estudiante import DocumentoEstudiante
+from .version_documento_estudiante import VersionDocumentoEstudiante
 
 
 __all__ = [
@@ -26,5 +32,11 @@ __all__ = [
     "SolicitudRequisito",
     "Entrega",
     "VersionEntrega",
-    "RevisionEntrega"
+    "RevisionEntrega",
+    "Seccion",
+    "Estudiante",
+    "Matricula",
+    "RequisitoExpediente",
+    "DocumentoEstudiante",
+    "VersionDocumentoEstudiante"
 ]
