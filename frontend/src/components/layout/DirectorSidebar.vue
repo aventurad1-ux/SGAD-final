@@ -105,8 +105,8 @@
         Administración
       </p>
 
-      <a
-        href="#"
+      <RouterLink
+        to="/directora/usuarios"
         class="menu-item"
       >
         <span class="menu-icon">♟</span>
@@ -114,7 +114,7 @@
         <span class="menu-text">
           Usuarios y permisos
         </span>
-      </a>
+      </RouterLink>
 
       <a
         href="#"
@@ -199,6 +199,10 @@ export default {
 
       localStorage.removeItem(
         "usuario"
+      );
+
+      localStorage.removeItem(
+        "sgad_ciclo"
       );
 
       this.$router.push("/");
