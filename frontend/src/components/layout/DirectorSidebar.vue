@@ -116,16 +116,16 @@
         </span>
       </a>
 
-      <a
-        href="#"
-        class="menu-item"
-      >
-        <span class="menu-icon">▥</span>
+<RouterLink
+  to="/directora/reportes"
+  class="menu-item"
+>
+  <span class="menu-icon">▥</span>
 
-        <span class="menu-text">
-          Reportes
-        </span>
-      </a>
+  <span class="menu-text">
+    Reportes
+  </span>
+</RouterLink>
 
       <a
         href="#"

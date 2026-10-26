@@ -5,6 +5,7 @@ import DashboardView from "../views/directora/DashboardView.vue";
 import ReviewInboxView from "../views/directora/ReviewInboxView.vue";
 import RequestsView from "../views/directora/RequestsView.vue";
 import ExpedientesView from "../views/directora/ExpedientesView.vue";
+import ReportsView from "../views/directora/ReportsView.vue";
 
 const routes = [
   {
@@ -47,7 +48,17 @@ const routes = [
       requiresAuth: true,
       role: "Directora"
     }
+  },
+
+{
+  path: "/directora/reportes",
+  name: "directora-reportes",
+  component: ReportsView,
+  meta: {
+    requiresAuth: true,
+    role: "Directora"
   }
+},
 
 ];
 
