@@ -1,7 +1,9 @@
 <template>
   <header class="director-topbar">
     <div class="topbar-left">
-      <strong class="topbar-sgad">SGAD</strong>
+      <strong class="topbar-sgad">
+        SGAD
+      </strong>
 
       <span class="topbar-separator"></span>
 
@@ -16,17 +18,20 @@
           Ciclo escolar
         </span>
 
-        <select v-model="cicloSeleccionado">
-          <option value="2026">
-            2026 · Actual
-          </option>
-
-          <option value="2025">
-            2025
-          </option>
-
-          <option value="2024">
-            2024
+        <select
+          v-model="cicloSeleccionado"
+          @change="cambiarCiclo"
+        >
+          <option
+            v-for="ciclo in ciclos"
+            :key="ciclo.id_ciclo"
+            :value="String(ciclo.id_ciclo)"
+          >
+            {{
+              ciclo.estado === "activo"
+                ? `${ciclo.anio} · Actual`
+                : `${ciclo.anio} · Histórico`
+            }}
           </option>
         </select>
       </div>
@@ -36,7 +41,9 @@
         type="button"
         title="Notificaciones"
       >
-        <span class="notification-icon">🔔</span>
+        <span class="notification-icon">
+          🔔
+        </span>
 
         <span class="notification-count">
           2
@@ -48,16 +55,16 @@
         type="button"
       >
         <div class="profile-avatar">
-           {{ iniciales }}
+          {{ iniciales }}
         </div>
 
         <div class="profile-text">
           <strong>
-             {{ nombreUsuario }}
+            {{ nombreUsuario }}
           </strong>
 
           <span>
-             {{ rolUsuario }}
+            {{ rolUsuario }}
           </span>
         </div>
       </button>
@@ -66,26 +73,67 @@
 </template>
 
 <script>
+import {
+  obtenerCiclos
+} from "../../services/ciclosService";
+
 export default {
   name: "DirectorTopbar",
 
   data() {
     return {
-      cicloSeleccionado: "2026",
+      ciclos: [],
+      cicloSeleccionado: "",
+
       nombreUsuario: "",
       rolUsuario: "",
       iniciales: ""
     };
   },
 
-  mounted() {
-    const usuarioGuardado =
-      localStorage.getItem("usuario");
+  async mounted() {
+    this.cargarUsuario();
 
-    if (usuarioGuardado) {
+    await this.cargarCiclos();
+
+    window.addEventListener(
+      "sgad-cycle-changed",
+      this.sincronizarCiclo
+    );
+  },
+
+  beforeUnmount() {
+    window.removeEventListener(
+      "sgad-cycle-changed",
+      this.sincronizarCiclo
+    );
+  },
+
+  methods: {
+    cargarUsuario() {
+      const usuarioGuardado =
+        localStorage.getItem(
+          "usuario"
+        );
+
+      if (!usuarioGuardado) {
+        this.nombreUsuario =
+          "Directora SGAD";
+
+        this.rolUsuario =
+          "Directora";
+
+        this.iniciales =
+          "DS";
+
+        return;
+      }
+
       try {
         const usuario =
-          JSON.parse(usuarioGuardado);
+          JSON.parse(
+            usuarioGuardado
+          );
 
         const nombres =
           usuario.nombres || "";
@@ -94,23 +142,162 @@ export default {
           usuario.apellidos || "";
 
         this.nombreUsuario =
-          `${nombres} ${apellidos}`.trim();
+          `${nombres} ${apellidos}`
+            .trim() ||
+          "Directora SGAD";
 
         this.rolUsuario =
-          usuario.rol || "";
-        
+          usuario.rol ||
+          "Directora";
+
         this.iniciales =
           `${nombres.charAt(0)}${apellidos.charAt(0)}`
-            .toUpperCase();
+            .toUpperCase() ||
+          "DS";
 
-      } catch {
+      } catch (error) {
+        console.error(
+          "No fue posible leer el usuario:",
+          error
+        );
+
         this.nombreUsuario =
-          "Usuario";
+          "Directora SGAD";
+
         this.rolUsuario =
-          "";
+          "Directora";
+
         this.iniciales =
-          "U";
+          "DS";
       }
+    },
+
+    async cargarCiclos() {
+      try {
+        const data =
+          await obtenerCiclos();
+
+        this.ciclos =
+          data.ciclos || [];
+
+        const cicloRuta =
+          this.$route.query.id_ciclo;
+
+        const cicloGuardado =
+          localStorage.getItem(
+            "sgad_ciclo"
+          );
+
+        let seleccionado =
+          cicloRuta ||
+          cicloGuardado ||
+          "";
+
+        const existe =
+          this.ciclos.some(
+            ciclo =>
+              String(
+                ciclo.id_ciclo
+              ) ===
+              String(
+                seleccionado
+              )
+          );
+
+        if (!existe) {
+          const cicloActual =
+            this.ciclos.find(
+              ciclo =>
+                ciclo.estado ===
+                "activo"
+            );
+
+          seleccionado =
+            cicloActual?.id_ciclo ||
+            this.ciclos[0]?.id_ciclo ||
+            "";
+        }
+
+        this.cicloSeleccionado =
+          String(
+            seleccionado
+          );
+
+        if (
+          this.cicloSeleccionado
+        ) {
+          localStorage.setItem(
+            "sgad_ciclo",
+            this.cicloSeleccionado
+          );
+        }
+
+      } catch (error) {
+        console.error(
+          "No fue posible cargar los ciclos:",
+          error
+        );
+      }
+    },
+
+    cambiarCiclo() {
+      if (
+        !this.cicloSeleccionado
+      ) {
+        return;
+      }
+
+      const idCiclo =
+        Number(
+          this.cicloSeleccionado
+        );
+
+      localStorage.setItem(
+        "sgad_ciclo",
+        String(idCiclo)
+      );
+
+      window.dispatchEvent(
+        new CustomEvent(
+          "sgad-cycle-changed",
+          {
+            detail: {
+              id_ciclo:
+                idCiclo
+            }
+          }
+        )
+      );
+
+      if (
+        this.$route.path ===
+        "/directora/ciclo-escolar"
+      ) {
+        this.$router.replace({
+          query: {
+            ...this.$route.query,
+            id_ciclo:
+              idCiclo
+          }
+        });
+      }
+    },
+
+    sincronizarCiclo(event) {
+      const idCiclo =
+        event.detail?.id_ciclo;
+
+      if (!idCiclo) {
+        return;
+      }
+
+      this.cicloSeleccionado =
+        String(idCiclo);
+
+      localStorage.setItem(
+        "sgad_ciclo",
+        String(idCiclo)
+      );
     }
   }
 };

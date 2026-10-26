@@ -1,0 +1,575 @@
+/* =====================================================
+   CICLO ESCOLAR
+   ===================================================== */
+
+.cycle-page-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.cycle-eyebrow {
+  margin: 0 0 4px;
+  color: #637b90;
+  font-size: 0.82rem;
+  font-weight: 900;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.cycle-page-head h1 {
+  margin: 0;
+  color: #10466f;
+  font-size: 2.45rem;
+  font-weight: 900;
+  line-height: 1.05;
+}
+
+.cycle-page-head p {
+  margin: 8px 0 0;
+  color: #637b90;
+  font-size: 0.96rem;
+}
+
+.cycle-page-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* BOTONES */
+
+.cycle-btn {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 9px 16px;
+  border-radius: 11px;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.cycle-btn-primary {
+  border: 0;
+  background: #10466f;
+  color: white;
+  box-shadow:
+    0 8px 18px
+    rgba(16, 70, 111, .18);
+}
+
+.cycle-btn-secondary {
+  border: 1px solid #bcd4e2;
+  background: white;
+  color: #10466f;
+}
+
+.cycle-btn-soft {
+  border: 1px solid #c7edf7;
+  background: #effbfe;
+  color: #056f9f;
+}
+
+.cycle-btn-warning {
+  border: 1px solid #f5d59e;
+  background: #fff2d8;
+  color: #8d4f00;
+}
+
+.cycle-btn-danger {
+  border: 0;
+  background: #bf4d4d;
+  color: white;
+}
+
+.cycle-btn-sm {
+  min-height: 34px;
+  padding: 7px 11px;
+  border-radius: 9px;
+  font-size: .84rem;
+}
+
+/* SELECTOR */
+
+.cycle-selector-card {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 14px;
+}
+
+.cycle-selector-card > div {
+  min-width: 250px;
+}
+
+.cycle-selector-card span {
+  display: block;
+  margin-bottom: 6px;
+  color: #637b90;
+  font-size: .76rem;
+  font-weight: 800;
+}
+
+/* CICLO */
+
+.cycle-main-card {
+  padding: 20px;
+  border: 1px solid #d9e6ee;
+  border-radius: 18px;
+  background: white;
+  box-shadow:
+    0 7px 22px
+    rgba(18, 62, 91, .08);
+}
+
+.cycle-card-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.cycle-card-head h2 {
+  margin: 0;
+  color: #10466f;
+  font-size: 1.35rem;
+}
+
+.cycle-card-head p {
+  margin: 5px 0 0;
+  color: #637b90;
+}
+
+.cycle-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cycle-status-info {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 17px;
+  padding: 13px 14px;
+  border-radius: 12px;
+  font-size: .86rem;
+}
+
+.cycle-status-success {
+  background: #def7ed;
+  color: #16866b;
+}
+
+.cycle-status-neutral {
+  background: #effbfe;
+  color: #056f9f;
+}
+
+.cycle-status-icon {
+  font-weight: 900;
+}
+
+/* BADGES */
+
+.cycle-badge {
+  display: inline-flex;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: .74rem;
+  font-weight: 800;
+}
+
+.cycle-badge-success {
+  background: #def7ed;
+  color: #16866b;
+}
+
+.cycle-badge-neutral {
+  background: #edf2f5;
+  color: #637b90;
+}
+
+/* SECCIONES */
+
+.cycle-section-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 20px;
+}
+
+.cycle-section-card {
+  padding: 20px;
+  border: 1px solid #d9e6ee;
+  border-left: 4px solid #08a8d7;
+  border-radius: 16px;
+  background: white;
+  box-shadow:
+    0 5px 15px
+    rgba(13, 57, 86, .06);
+}
+
+.cycle-section-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.cycle-section-eyebrow {
+  margin: 0 0 5px;
+  color: #056f9f;
+  font-size: .72rem;
+  font-weight: 900;
+  letter-spacing: .13em;
+}
+
+.cycle-section-card h3 {
+  margin: 0;
+  color: #10466f;
+  font-size: 1.35rem;
+}
+
+.cycle-section-count {
+  color: #056f9f;
+  font-size: 1.8rem;
+  font-weight: 900;
+}
+
+.cycle-section-label {
+  margin: 18px 0 3px;
+  color: #637b90;
+  font-size: .78rem;
+}
+
+.cycle-section-teacher {
+  display: block;
+  color: #102c45;
+  font-size: .9rem;
+}
+
+.cycle-section-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 16px;
+  padding-top: 13px;
+  border-top: 1px solid #d9e6ee;
+}
+
+/* INPUTS */
+
+.cycle-input {
+  width: 100%;
+  min-height: 46px;
+  padding: 12px 14px;
+  border: 1px solid #cbdce7;
+  border-radius: 12px;
+  background: white;
+  color: #102c45;
+  outline: none;
+}
+
+.cycle-input:focus {
+  border-color: #08a8d7;
+  box-shadow:
+    0 0 0 4px
+    rgba(8, 168, 215, .12);
+}
+
+/* MODALES */
+
+.cycle-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background:
+    rgba(7, 40, 68, .67);
+  backdrop-filter: blur(4px);
+}
+
+.cycle-overlay-front {
+  z-index: 2100;
+}
+
+.cycle-modal {
+  width: 100%;
+  max-height: calc(100vh - 40px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 20px;
+  background: white;
+  box-shadow:
+    0 24px 70px
+    rgba(4, 31, 50, .33);
+}
+
+.cycle-modal-sm {
+  max-width: 590px;
+}
+
+.cycle-modal-lg {
+  max-width: 920px;
+}
+
+.cycle-modal-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 21px 25px 18px;
+  border-bottom: 1px solid #d9e6ee;
+}
+
+.cycle-modal-head p {
+  margin: 0 0 3px;
+  color: #056f9f;
+  font-size: .7rem;
+  font-weight: 900;
+  letter-spacing: .12em;
+}
+
+.cycle-modal-head h2 {
+  margin: 0;
+  color: #10466f;
+  font-size: 1.55rem;
+}
+
+.cycle-close {
+  width: 36px;
+  height: 36px;
+  border: 0;
+  background: transparent;
+  color: #637b90;
+  font-size: 1.5rem;
+}
+
+.cycle-modal-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 22px 25px;
+}
+
+.cycle-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 16px 25px 20px;
+  border-top: 1px solid #d9e6ee;
+  background: #fbfdfe;
+}
+
+/* FORM */
+
+.cycle-form-group {
+  margin-bottom: 17px;
+}
+
+.cycle-form-group label {
+  display: block;
+  margin-bottom: 7px;
+  color: #102c45;
+  font-size: .88rem;
+  font-weight: 700;
+}
+
+.cycle-form-group label.required::after {
+  content: " *";
+  color: #bf4d4d;
+}
+
+.cycle-form-two {
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.cycle-form-three {
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.cycle-hint {
+  margin: -5px 0 0;
+  color: #637b90;
+  font-size: .8rem;
+}
+
+.cycle-current-teacher {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px;
+  border: 1px solid #c7edf7;
+  border-radius: 12px;
+  background: #effbfe;
+  color: #056f9f;
+}
+
+/* CHECKS */
+
+.cycle-check-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.cycle-check-card {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 11px 12px;
+  border: 1px solid #d9e6ee;
+  border-radius: 11px;
+  background: white;
+}
+
+.cycle-check-card input {
+  margin-top: 4px;
+  accent-color: #08a8d7;
+}
+
+.cycle-check-card strong,
+.cycle-check-card small {
+  display: block;
+}
+
+.cycle-check-card strong {
+  color: #102c45;
+}
+
+.cycle-check-card small {
+  margin-top: 3px;
+  color: #637b90;
+}
+
+/* STEPPER */
+
+.cycle-stepper {
+  display: flex;
+  gap: 7px;
+  margin-bottom: 20px;
+}
+
+.cycle-stepper span {
+  height: 5px;
+  flex: 1;
+  border-radius: 999px;
+  background: #d9e6ee;
+}
+
+.cycle-stepper .done {
+  background: #16866b;
+}
+
+.cycle-stepper .active {
+  background: #08a8d7;
+}
+
+/* WARNING */
+
+.cycle-warning {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  padding: 13px 14px;
+  border: 1px solid #f5d59e;
+  border-radius: 12px;
+  background: #fff2d8;
+  color: #8d4f00;
+}
+
+.cycle-warning p {
+  margin: 0;
+}
+
+.cycle-confirm-text {
+  margin-top: 0;
+  color: #102c45;
+}
+
+/* ALERTAS */
+
+.cycle-alert {
+  margin-bottom: 18px;
+  padding: 13px 15px;
+  border-radius: 12px;
+  font-size: .84rem;
+  font-weight: 700;
+}
+
+.cycle-alert-success {
+  background: #def7ed;
+  color: #16866b;
+}
+
+.cycle-alert-error {
+  background: #ffe7e5;
+  color: #bf4d4d;
+}
+
+.cycle-muted {
+  color: #637b90;
+  font-size: .8rem;
+}
+
+.cycle-empty {
+  grid-column: 1 / -1;
+  padding: 40px;
+  border: 1px solid #d9e6ee;
+  border-radius: 18px;
+  background: white;
+  color: #637b90;
+  text-align: center;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1050px) {
+  .cycle-section-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .cycle-form-three {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .cycle-page-head {
+    flex-direction: column;
+  }
+
+  .cycle-page-actions {
+    width: 100%;
+  }
+
+  .cycle-section-grid,
+  .cycle-form-two,
+  .cycle-check-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cycle-card-head,
+  .cycle-section-foot {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .cycle-overlay {
+    padding: 10px;
+  }
+}

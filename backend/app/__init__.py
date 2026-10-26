@@ -5,6 +5,7 @@ from app.extensions import db, migrate, cors, jwt
 from app.routes.review_inbox import review_inbox_bp
 from app.routes.requests import requests_bp
 from app.routes.expedientes import expedientes_bp
+from app.routes.ciclos import ciclos_bp
 
 
 def create_app():
@@ -63,5 +64,6 @@ def create_app():
     app.register_blueprint(review_inbox_bp)
     app.register_blueprint(requests_bp)
     app.register_blueprint(expedientes_bp)
+    app.register_blueprint(ciclos_bp)
 
     return app
