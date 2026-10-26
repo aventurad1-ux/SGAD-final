@@ -75,8 +75,8 @@
         </span>
       </RouterLink>
 
-      <a
-        href="#"
+      <RouterLink
+        to="/directora/ciclo-escolar"
         class="menu-item"
       >
         <span class="menu-icon">▱</span>
@@ -84,7 +84,7 @@
         <span class="menu-text">
           Ciclo escolar
         </span>
-      </a>
+      </RouterLink>
 
       <RouterLink
         to="/directora/solicitudes"

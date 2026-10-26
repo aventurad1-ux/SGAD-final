@@ -5,6 +5,7 @@ import DashboardView from "../views/directora/DashboardView.vue";
 import ReviewInboxView from "../views/directora/ReviewInboxView.vue";
 import RequestsView from "../views/directora/RequestsView.vue";
 import ExpedientesView from "../views/directora/ExpedientesView.vue";
+import CicloEscolarView from "../views/directora/CicloEscolarView.vue";
 
 const routes = [
   {
@@ -43,6 +44,15 @@ const routes = [
     path: "/directora/expedientes",
     name: "directora-expedientes",
     component: ExpedientesView,
+    meta: {
+      requiresAuth: true,
+      role: "Directora"
+    }
+  },
+  {
+    path: "/directora/ciclo-escolar",
+    name: "directora-ciclo-escolar",
+    component: CicloEscolarView,
     meta: {
       requiresAuth: true,
       role: "Directora"
