@@ -1,0 +1,374 @@
+/* =========================================================
+   PÁGINA
+========================================================= */
+
+.receipts-page {
+  min-height: calc(100vh - 82px);
+  padding: 38px 40px 60px;
+  background: #f4f9fc;
+}
+
+.receipts-header {
+  margin-bottom: 26px;
+}
+
+.receipts-kicker {
+  margin: 0 0 3px;
+  color: #5d7d96;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+}
+
+.receipts-header h1 {
+  margin: 0;
+  color: #064b78;
+  font-size: 42px;
+  font-weight: 700;
+  line-height: 1.08;
+}
+
+.receipts-subtitle {
+  margin: 10px 0 0;
+  color: #5f7e95;
+  font-size: 16px;
+}
+
+
+/* =========================================================
+   TABLA
+========================================================= */
+
+.receipts-table-card {
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid #d9e7ee;
+  border-radius: 18px;
+  box-shadow:
+    0 8px 20px rgba(41, 79, 100, 0.05);
+}
+
+.receipts-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.receipts-table th {
+  padding: 14px 16px;
+  border-bottom: 1px solid #d8e5eb;
+  background: #f8fbfd;
+  color: #58758a;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-align: left;
+}
+
+.receipts-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #e4edf1;
+  color: #123c58;
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+.receipts-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.receipt-code {
+  color: #064b78;
+}
+
+.receipts-message {
+  padding: 35px;
+  color: #668092;
+  text-align: center;
+}
+
+
+/* =========================================================
+   ESTADOS
+========================================================= */
+
+.receipt-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 11px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.status-approved {
+  background: #dff7ea;
+  color: #158659;
+}
+
+.status-correction {
+  background: #ffe4e2;
+  color: #c34d47;
+}
+
+.status-review {
+  background: #e7f5ff;
+  color: #1676a6;
+}
+
+.status-rejected {
+  background: #fce6e6;
+  color: #b63838;
+}
+
+
+/* =========================================================
+   BOTÓN VER
+========================================================= */
+
+.receipt-view-button {
+  padding: 9px 13px;
+  border: 1px solid #bce6f3;
+  border-radius: 9px;
+  background: #effbff;
+  color: #0875a3;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   OVERLAY
+========================================================= */
+
+.receipt-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: grid;
+  place-items: center;
+  padding: 25px;
+  background: rgba(17, 48, 68, 0.72);
+  backdrop-filter: blur(4px);
+}
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.receipt-modal {
+  width: min(520px, 92vw);
+  overflow: hidden;
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow:
+    0 24px 65px rgba(0, 0, 0, 0.28);
+}
+
+.receipt-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 23px 26px 18px;
+  border-bottom: 1px solid #d9e4e9;
+}
+
+.receipt-modal-header p {
+  margin: 0 0 5px;
+  color: #1080b5;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.receipt-modal-header h2 {
+  margin: 0;
+  color: #064b78;
+  font-size: 27px;
+}
+
+.receipt-close-x {
+  border: 0;
+  background: transparent;
+  color: #758b98;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   CUERPO COMPROBANTE
+========================================================= */
+
+.receipt-body {
+  padding: 26px;
+}
+
+.receipt-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.receipt-brand img {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.receipt-brand div {
+  display: flex;
+  flex-direction: column;
+}
+
+.receipt-brand strong {
+  color: #064b78;
+  font-size: 26px;
+}
+
+.receipt-brand span {
+  margin-top: 3px;
+  color: #647c8e;
+  font-size: 12px;
+}
+
+.receipt-blue-line {
+  height: 2px;
+  margin: 16px 0 27px;
+  background: #064b78;
+}
+
+.receipt-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 20px;
+}
+
+.receipt-info {
+  min-height: 50px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed #d2e0e7;
+}
+
+.receipt-info span {
+  display: block;
+  margin-bottom: 6px;
+  color: #71889a;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+}
+
+.receipt-info strong {
+  color: #153d58;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.receipt-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 16px 25px 20px;
+  border-top: 1px solid #d9e4e9;
+}
+
+.receipt-footer-button {
+  padding: 11px 17px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.receipt-footer-button.secondary {
+  border: 1px solid #bdd3df;
+  background: #ffffff;
+  color: #07527f;
+}
+
+.receipt-footer-button.primary {
+  border: 1px solid #07527f;
+  background: #07527f;
+  color: #ffffff;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 750px) {
+  .receipts-page {
+    padding: 28px 20px;
+  }
+
+  .receipts-header h1 {
+    font-size: 34px;
+  }
+
+  .receipts-table-card {
+    overflow-x: auto;
+  }
+
+  .receipts-table {
+    min-width: 760px;
+  }
+
+  .receipt-info-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* =========================================================
+   IMPRESIÓN / GUARDAR PDF
+========================================================= */
+
+@media print {
+
+  body * {
+    visibility: hidden !important;
+  }
+
+  #comprobante-imprimible,
+  #comprobante-imprimible * {
+    visibility: visible !important;
+  }
+
+  #comprobante-imprimible {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    width: 520px;
+    max-width: none;
+    transform: translateX(-50%);
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .receipt-modal {
+    overflow: visible;
+  }
+
+  .receipt-modal-header,
+  .receipt-body {
+    background: #ffffff !important;
+  }
+
+  @page {
+    size: auto;
+    margin: 15mm;
+  }
+}

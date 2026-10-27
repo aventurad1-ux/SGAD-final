@@ -1,0 +1,445 @@
+/* =========================================================
+   PÁGINA
+========================================================= */
+
+.corrections-page {
+  min-height: calc(100vh - 82px);
+  padding: 38px 40px 60px;
+  background: #f4f9fc;
+}
+
+.corrections-header {
+  margin-bottom: 28px;
+}
+
+.corrections-kicker {
+  margin: 0 0 3px;
+  color: #5d7d96;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+}
+
+.corrections-header h1 {
+  margin: 0;
+  color: #064b78;
+  font-size: 42px;
+  font-weight: 700;
+  line-height: 1.08;
+}
+
+.corrections-subtitle {
+  margin: 10px 0 0;
+  color: #5f7e95;
+  font-size: 16px;
+}
+
+
+/* =========================================================
+   TARJETAS
+========================================================= */
+
+.corrections-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(auto-fill, minmax(420px, 490px));
+  gap: 20px;
+}
+
+.correction-card {
+  padding: 23px;
+  background: #ffffff;
+  border: 1px solid #d9e7ee;
+  border-radius: 19px;
+  box-shadow:
+    0 8px 18px rgba(45, 85, 105, 0.08);
+}
+
+.correction-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.correction-card-top h2 {
+  margin: 0;
+  color: #064b78;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.correction-card-top p {
+  margin: 6px 0 0;
+  color: #52748a;
+  font-size: 14px;
+}
+
+.correction-badge {
+  flex-shrink: 0;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: #ffe5e4;
+  color: #be514d;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.correction-observation {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 22px 0 20px;
+  padding: 13px 14px;
+  border: 1px solid #f3cc8b;
+  border-radius: 12px;
+  background: #fff7e8;
+  color: #9f6218;
+}
+
+.correction-observation p {
+  margin: 0;
+  font-size: 13px;
+}
+
+.correction-send-button {
+  padding: 12px 17px;
+  border: 0;
+  border-radius: 10px;
+  background: #07527f;
+  box-shadow:
+    0 5px 14px rgba(7, 82, 127, 0.18);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   VACÍO
+========================================================= */
+
+.corrections-empty {
+  padding: 30px;
+  background: #ffffff;
+  border: 1px solid #dce8ee;
+  border-radius: 18px;
+  color: #607b8d;
+  text-align: center;
+}
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.correction-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 28px;
+  background: rgba(19, 48, 67, 0.72);
+  backdrop-filter: blur(4px);
+}
+
+.correction-modal {
+  display: flex;
+  width: min(1040px, 86vw);
+  max-height: calc(100vh - 70px);
+  flex-direction: column;
+  overflow: hidden;
+  background: #ffffff;
+  border-radius: 17px;
+  box-shadow:
+    0 25px 60px rgba(0, 0, 0, 0.28);
+}
+
+
+/* =========================================================
+   HEADER MODAL
+========================================================= */
+
+.correction-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 22px 24px 18px;
+  border-bottom: 1px solid #dbe6eb;
+}
+
+.correction-modal-header p {
+  margin: 0 0 4px;
+  color: #1380b8;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.correction-modal-header h2 {
+  margin: 0;
+  color: #064b78;
+  font-size: 27px;
+  font-weight: 700;
+}
+
+.correction-modal-x {
+  border: 0;
+  background: transparent;
+  color: #708793;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.correction-modal-loading {
+  padding: 50px;
+  text-align: center;
+}
+
+
+/* =========================================================
+   BODY
+========================================================= */
+
+.correction-modal-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 30px 24px 38px;
+}
+
+.correction-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 20px;
+  row-gap: 18px;
+}
+
+.correction-info-item {
+  padding-bottom: 12px;
+  border-bottom: 1px dotted #cbdde6;
+}
+
+.correction-info-item span {
+  display: block;
+  margin-bottom: 6px;
+  color: #6b8799;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.correction-info-item strong {
+  color: #153f5c;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.correction-description {
+  margin: 23px 0 20px;
+  color: #284c63;
+  font-size: 15px;
+}
+
+
+/* =========================================================
+   OBSERVACIÓN DIRECCIÓN
+========================================================= */
+
+.correction-director-note {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 20px;
+  padding: 13px 14px;
+  border: 1px solid #f0cc91;
+  border-radius: 12px;
+  background: #fff7e8;
+  color: #9a611c;
+}
+
+.correction-director-note p {
+  margin: 0;
+  font-size: 13px;
+}
+
+
+/* =========================================================
+   ARCHIVO
+========================================================= */
+
+.correction-file-box {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 13px 14px;
+  border: 1px solid #bce7f4;
+  border-radius: 10px;
+  background: #eafaff;
+  color: #46788e;
+  font-size: 13px;
+}
+
+.correction-file-box strong {
+  color: #176987;
+}
+
+.correction-file-icon {
+  margin-right: 4px;
+}
+
+.correction-no-versions {
+  margin: 20px 0;
+  color: #6e8797;
+  font-size: 13px;
+}
+
+.correction-versions {
+  margin: 20px 0;
+}
+
+.correction-versions > p {
+  color: #567487;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.correction-version-row {
+  display: flex;
+  gap: 10px;
+  padding: 9px 0;
+  border-bottom: 1px solid #edf2f4;
+  color: #617d8d;
+  font-size: 12px;
+}
+
+
+/* =========================================================
+   SUBIR CORRECCIÓN
+========================================================= */
+
+.correction-upload {
+  display: flex;
+  flex-direction: column;
+}
+
+.correction-upload label {
+  margin: 0 0 8px;
+  color: #173d57;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.correction-upload label:not(:first-child) {
+  margin-top: 17px;
+}
+
+.correction-upload label span {
+  color: #d74b4b;
+}
+
+.correction-upload input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 9px 11px;
+  border: 1px solid #c9dae4;
+  border-radius: 9px;
+  color: #405f73;
+  background: #ffffff;
+}
+
+.correction-upload textarea {
+  width: 100%;
+  min-height: 110px;
+  box-sizing: border-box;
+  padding: 10px;
+  border: 1px solid #c9dae4;
+  border-radius: 9px;
+  outline: none;
+  font-family: inherit;
+  resize: vertical;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.correction-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 9px;
+  padding: 16px 24px 20px;
+  border-top: 1px solid #dbe6eb;
+  background: #ffffff;
+}
+
+.correction-modal-btn {
+  padding: 11px 17px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.correction-modal-btn.light {
+  border: 1px solid #bdd4e1;
+  background: #ffffff;
+  color: #07527f;
+}
+
+.correction-modal-btn.view {
+  border: 1px solid #c8e8f2;
+  background: #eefaff;
+  color: #05739f;
+}
+
+.correction-modal-btn.primary {
+  border: 1px solid #07527f;
+  background: #07527f;
+  color: #ffffff;
+}
+
+.correction-modal-btn.primary:disabled {
+  opacity: 0.6;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 900px) {
+  .corrections-page {
+    padding: 28px 22px 45px;
+  }
+
+  .corrections-header h1 {
+    font-size: 34px;
+  }
+
+  .corrections-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .correction-modal {
+    width: 94vw;
+  }
+}
+
+@media (max-width: 650px) {
+  .correction-info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .correction-card-top {
+    flex-direction: column;
+  }
+
+  .correction-modal-footer {
+    flex-wrap: wrap;
+  }
+}

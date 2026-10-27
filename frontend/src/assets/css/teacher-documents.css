@@ -1,0 +1,406 @@
+/* =========================================================
+   PÁGINA
+========================================================= */
+
+.documents-page {
+  min-height: calc(100vh - 82px);
+  padding: 38px 40px 60px;
+  background: #f4f9fc;
+}
+
+.documents-header {
+  margin-bottom: 28px;
+}
+
+.documents-kicker {
+  margin: 0 0 3px;
+  color: #5d7d96;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+}
+
+.documents-header h1 {
+  margin: 0;
+  color: #064b78;
+  font-size: 42px;
+  font-weight: 700;
+  line-height: 1.08;
+}
+
+.documents-subtitle {
+  margin: 10px 0 0;
+  color: #5f7e95;
+  font-size: 16px;
+}
+
+
+/* =========================================================
+   TABLA
+========================================================= */
+
+.documents-table-wrapper {
+  overflow-x: auto;
+  background: #ffffff;
+  border: 1px solid #d9e7ee;
+  border-radius: 19px;
+  box-shadow:
+    0 8px 18px rgba(45, 85, 105, 0.08);
+}
+
+.documents-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.documents-table thead {
+  background: #f7fbfd;
+}
+
+.documents-table th {
+  padding: 16px 17px;
+  border-bottom: 1px solid #d9e7ee;
+  color: #57768c;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-align: left;
+}
+
+.documents-table td {
+  padding: 17px;
+  border-bottom: 1px solid #edf2f4;
+  color: #163a53;
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+.documents-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.document-name {
+  display: block;
+  margin-bottom: 4px;
+  color: #073f67;
+  font-size: 15px;
+}
+
+.document-code {
+  display: block;
+  color: #668296;
+  font-size: 12px;
+}
+
+
+/* =========================================================
+   ESTADOS
+========================================================= */
+
+.document-status {
+  display: inline-block;
+  padding: 7px 12px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.status-aprobado {
+  background: #dcf6e9;
+  color: #00865f;
+}
+
+.status-en_revision,
+.status-entregado {
+  background: #e2f1f9;
+  color: #32779c;
+}
+
+.status-correccion_solicitada {
+  background: #fff0d8;
+  color: #b87318;
+}
+
+.status-rechazado {
+  background: #fbe3e3;
+  color: #b63d3d;
+}
+
+.status-pendiente {
+  background: #fff0d9;
+  color: #b76c1b;
+}
+
+
+/* =========================================================
+   ACCIONES
+========================================================= */
+
+.document-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.document-btn {
+  padding: 9px 13px;
+  border-radius: 9px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.document-btn-detail {
+  border: 1px solid #bce4f1;
+  background: #effaff;
+  color: #04729d;
+}
+
+.document-btn-download {
+  border: 1px solid #bed5e2;
+  background: #ffffff;
+  color: #07527f;
+}
+
+
+/* =========================================================
+   VACÍO
+========================================================= */
+
+.documents-empty {
+  padding: 30px;
+  background: #ffffff;
+  border: 1px solid #dce8ee;
+  border-radius: 18px;
+  color: #607b8d;
+  text-align: center;
+}
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.document-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 28px;
+  background: rgba(19, 48, 67, 0.72);
+  backdrop-filter: blur(4px);
+}
+
+.document-modal {
+  display: flex;
+  width: min(1040px, 86vw);
+  max-height: calc(100vh - 70px);
+  flex-direction: column;
+  overflow: hidden;
+  background: #ffffff;
+  border-radius: 17px;
+  box-shadow:
+    0 25px 60px rgba(0, 0, 0, 0.28);
+}
+
+.document-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 22px 24px 18px;
+  border-bottom: 1px solid #dbe6eb;
+}
+
+.document-modal-header p {
+  margin: 0 0 4px;
+  color: #1380b8;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.document-modal-header h2 {
+  margin: 0;
+  color: #064b78;
+  font-size: 27px;
+  font-weight: 700;
+}
+
+.document-modal-x {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: #708793;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.document-modal-loading {
+  padding: 50px;
+  text-align: center;
+}
+
+
+/* =========================================================
+   BODY MODAL
+========================================================= */
+
+.document-modal-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 30px 24px 38px;
+}
+
+.document-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 20px;
+  row-gap: 18px;
+}
+
+.document-info-item {
+  padding-bottom: 12px;
+  border-bottom: 1px dotted #cbdde6;
+}
+
+.document-info-item span {
+  display: block;
+  margin-bottom: 6px;
+  color: #6b8799;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.document-info-item strong {
+  color: #153f5c;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.document-modal-description {
+  margin: 23px 0 20px;
+  color: #284c63;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   ARCHIVO
+========================================================= */
+
+.document-file-box {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 13px 14px;
+  border: 1px solid #bce7f4;
+  border-radius: 10px;
+  background: #eafaff;
+  color: #46788e;
+  font-size: 13px;
+}
+
+.document-file-box strong {
+  color: #176987;
+}
+
+.document-file-icon {
+  margin-right: 4px;
+}
+
+.document-no-versions {
+  margin: 20px 0 0;
+  color: #6e8797;
+  font-size: 13px;
+}
+
+.document-versions {
+  margin-top: 20px;
+}
+
+.document-versions > p {
+  color: #567487;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.document-version-row {
+  display: flex;
+  gap: 10px;
+  padding: 9px 0;
+  border-bottom: 1px solid #edf2f4;
+  color: #617d8d;
+  font-size: 12px;
+}
+
+
+/* =========================================================
+   FOOTER MODAL
+========================================================= */
+
+.document-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 9px;
+  padding: 16px 24px 20px;
+  border-top: 1px solid #dbe6eb;
+  background: #ffffff;
+}
+
+.document-modal-btn {
+  padding: 11px 17px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.document-modal-btn.light {
+  border: 1px solid #bdd4e1;
+  background: #ffffff;
+  color: #07527f;
+}
+
+.document-modal-btn.view {
+  border: 1px solid #c8e8f2;
+  background: #eefaff;
+  color: #05739f;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 900px) {
+  .documents-page {
+    padding: 28px 22px 45px;
+  }
+
+  .documents-header h1 {
+    font-size: 34px;
+  }
+
+  .document-modal {
+    width: 94vw;
+  }
+}
+
+@media (max-width: 700px) {
+  .documents-header h1 {
+    font-size: 30px;
+  }
+
+  .document-info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .document-actions {
+    flex-direction: column;
+  }
+}
