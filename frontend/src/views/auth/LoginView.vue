@@ -33,7 +33,9 @@
           SGAD
         </div>
 
-        <h2>Bienvenida al sistema</h2>
+        <h2>
+          Bienvenida al sistema
+        </h2>
 
         <p class="welcome-text">
           Ingrese con la cuenta asignada por Dirección.
@@ -51,7 +53,7 @@
               id="correo"
               v-model.trim="correo"
               type="email"
-              placeholder="directora@sgad.demo"
+              placeholder="Correo institucional"
               autocomplete="email"
               :disabled="cargando"
             />
@@ -75,9 +77,14 @@
               <button
                 type="button"
                 class="show-password-button"
+                :disabled="cargando"
                 @click="mostrarPassword = !mostrarPassword"
               >
-                {{ mostrarPassword ? "Ocultar" : "Ver" }}
+                {{
+                  mostrarPassword
+                    ? "Ocultar"
+                    : "Ver"
+                }}
               </button>
             </div>
           </div>
@@ -110,6 +117,7 @@
           <div class="demo-buttons">
             <button
               type="button"
+              :disabled="cargando"
               @click="usarDirectora"
             >
               Usar cuenta de directora
@@ -117,6 +125,7 @@
 
             <button
               type="button"
+              :disabled="cargando"
               @click="usarDocente"
             >
               Usar cuenta de docente
@@ -129,7 +138,9 @@
 </template>
 
 <script>
-import { login } from "../../services/authService";
+import {
+  login
+} from "../../services/authService";
 
 export default {
   name: "LoginView",
@@ -146,33 +157,50 @@ export default {
 
   methods: {
     usarDirectora() {
-      this.correo = "directora@sgad.demo";
-      this.password = "Directora2026";
-      this.mensajeError = "";
+      this.correo =
+        "directora@sgad.demo";
+
+      this.password =
+        "Directora2026";
+
+      this.mensajeError =
+        "";
     },
 
     usarDocente() {
-      this.correo = "docente@sgad.demo";
-      this.password = "Docente2026";
-      this.mensajeError = "";
+      this.correo =
+        "docente@sgad.demo";
+
+      this.password =
+        "Docente2026";
+
+      this.mensajeError =
+        "";
     },
 
     async iniciarSesion() {
-      this.mensajeError = "";
+      this.mensajeError =
+        "";
 
-      if (!this.correo || !this.password) {
+      if (
+        !this.correo ||
+        !this.password
+      ) {
         this.mensajeError =
           "Ingrese su correo institucional y contraseña.";
+
         return;
       }
 
-      this.cargando = true;
+      this.cargando =
+        true;
 
       try {
-        const data = await login(
-          this.correo,
-          this.password
-        );
+        const data =
+          await login(
+            this.correo,
+            this.password
+          );
 
         localStorage.setItem(
           "access_token",
@@ -186,31 +214,74 @@ export default {
 
         localStorage.setItem(
           "usuario",
-          JSON.stringify(data.usuario)
+          JSON.stringify(
+            data.usuario
+          )
         );
-
-        console.log(
-          "Inicio de sesión exitoso:",
-          data.usuario
-        );
-
-        if (data.usuario.rol === "Directora") {
-        this.$router.push("/directora/dashboard");
-      }
 
         /*
-        Después agregaremos aquí
-        la redirección según el rol.
-        */
+         * Evitamos que un usuario nuevo
+         * herede el ciclo seleccionado
+         * por una sesión anterior.
+         */
+        localStorage.removeItem(
+          "sgad_ciclo"
+        );
+
+        const rol =
+          data.usuario?.rol;
+
+        if (
+          rol === "Directora"
+        ) {
+          await this.$router.replace(
+            "/directora/dashboard"
+          );
+
+          return;
+        }
+
+        if (
+          rol === "Docente"
+        ) {
+          await this.$router.replace(
+            "/docente/dashboard"
+          );
+
+          return;
+        }
+
+        /*
+         * Si apareciera un rol no soportado,
+         * eliminamos la sesión creada.
+         */
+        localStorage.removeItem(
+          "access_token"
+        );
+
+        localStorage.removeItem(
+          "refresh_token"
+        );
+
+        localStorage.removeItem(
+          "usuario"
+        );
+
+        this.mensajeError =
+          "La cuenta no tiene un perfil habilitado en el sistema.";
+
       } catch (error) {
-        const respuesta = error.response?.data;
+        const respuesta =
+          error.response?.data;
 
         this.mensajeError =
           respuesta?.message ||
           respuesta?.mensaje ||
           "Correo o contraseña incorrectos.";
+
       } finally {
-        this.cargando = false;
+        this.cargando =
+          false;
       }
     }
   }
@@ -311,7 +382,8 @@ export default {
   border: 1px solid #dde5e9;
   border-radius: 30px;
   box-shadow:
-    0 22px 60px rgba(54, 85, 104, 0.08);
+    0 22px 60px
+    rgba(54, 85, 104, 0.08);
 }
 
 .sgad-badge {
@@ -376,7 +448,8 @@ export default {
 .form-group input:focus {
   border-color: #4c82ad;
   box-shadow:
-    0 0 0 3px rgba(52, 112, 159, 0.1);
+    0 0 0 3px
+    rgba(52, 112, 159, 0.1);
 }
 
 .password-row {
@@ -397,6 +470,11 @@ export default {
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
+}
+
+.show-password-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
 .login-button {
@@ -463,8 +541,13 @@ export default {
   cursor: pointer;
 }
 
-.demo-buttons button:hover {
+.demo-buttons button:hover:not(:disabled) {
   background: #f0f6f9;
+}
+
+.demo-buttons button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
 @media (max-width: 1000px) {

@@ -1,0 +1,647 @@
+.students-page-head {
+  margin-bottom: 28px;
+}
+
+.students-page-head p {
+  margin: 0 0 4px;
+  color: #66869b;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.students-page-head h1 {
+  margin: 0;
+  color: #0a4d77;
+  font-size: 40px;
+  font-weight: 500;
+}
+
+.students-page-head span {
+  display: block;
+  margin-top: 8px;
+  color: #6b8799;
+  font-size: 15px;
+}
+
+
+/* =========================================================
+   FILTROS
+========================================================= */
+
+.students-filters {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr)
+    220px
+    220px;
+  gap: 10px;
+
+  padding: 14px;
+  margin-bottom: 18px;
+
+  border: 1px solid #cbdde7;
+  border-radius: 16px;
+  background: #ffffff;
+}
+
+.students-search input,
+.students-filters select {
+  width: 100%;
+  height: 49px;
+
+  padding: 0 14px;
+
+  border: 1px solid #a8cfe0;
+  border-radius: 11px;
+
+  background: #ffffff;
+  color: #173f59;
+
+  font-size: 14px;
+
+  outline: none;
+}
+
+.students-search input::placeholder {
+  color: #7d8d97;
+}
+
+.students-search input:focus,
+.students-filters select:focus {
+  border-color: #26b9df;
+
+  box-shadow:
+    0 0 0 2px
+    rgba(38, 185, 223, 0.12);
+}
+
+
+/* =========================================================
+   TABLA
+========================================================= */
+
+.students-table-card {
+  overflow: hidden;
+
+  border: 1px solid #cbdde7;
+  border-radius: 16px;
+
+  background: #ffffff;
+}
+
+.students-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.students-table {
+  width: 100%;
+
+  border-collapse: collapse;
+}
+
+.students-table thead {
+  background: #f3f8fa;
+}
+
+.students-table th {
+  padding: 14px 17px;
+
+  color: #55778d;
+
+  text-align: left;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  letter-spacing: 0.08em;
+}
+
+.students-table td {
+  padding: 16px 17px;
+
+  border-top: 1px solid #e0eaf0;
+
+  color: #17415b;
+
+  font-size: 13px;
+}
+
+.student-main-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.student-main-info strong {
+  color: #062f4d;
+
+  font-size: 14px;
+}
+
+.student-main-info span {
+  color: #6e8da1;
+
+  font-size: 11px;
+}
+
+
+/* =========================================================
+   ESTADO
+========================================================= */
+
+.student-expediente-badge {
+  display: inline-flex;
+
+  padding: 6px 10px;
+
+  border-radius: 999px;
+
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.student-expediente-badge.complete {
+  background: #ddf6eb;
+  color: #08765a;
+}
+
+.student-expediente-badge.pending {
+  background: #fff1cf;
+  color: #9a6a10;
+}
+
+
+/* =========================================================
+   BOTÓN CONSULTAR
+========================================================= */
+
+.student-consult-btn {
+  min-height: 35px;
+
+  padding: 0 12px;
+
+  border: 1px solid #a6daeb;
+  border-radius: 8px;
+
+  background: #edfaff;
+  color: #08769d;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  cursor: pointer;
+}
+
+.student-consult-btn:hover {
+  background: #dff6fc;
+}
+
+
+/* =========================================================
+   ESTADO VACÍO
+========================================================= */
+
+.students-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 180px;
+
+  padding: 25px;
+
+  color: #718b9a;
+
+  text-align: center;
+}
+
+
+/* =========================================================
+   MODAL CONSULTA DE EXPEDIENTE
+========================================================= */
+
+.student-consult-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+
+  display: grid;
+  place-items: center;
+
+  padding: 20px;
+
+  background:
+    rgba(4, 29, 46, 0.67);
+
+  backdrop-filter: blur(2px);
+}
+
+.student-consult-modal {
+  display: flex;
+  flex-direction: column;
+
+  width: min(1040px, 96vw);
+  height: 596px;
+  max-height: calc(100vh - 40px);
+
+  overflow: hidden;
+
+  border-radius: 20px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 30px 80px
+    rgba(0, 0, 0, 0.3);
+}
+
+
+/* =========================================================
+   HEADER DEL MODAL
+========================================================= */
+
+.student-consult-header {
+  flex: 0 0 auto;
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  min-height: 92px;
+
+  padding: 20px 25px;
+
+  border-bottom: 1px solid #d6e4ec;
+
+  background: #ffffff;
+}
+
+.student-consult-header p {
+  margin: 0 0 7px;
+
+  color: #08779d;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  letter-spacing: 0.12em;
+}
+
+.student-consult-header h2 {
+  margin: 0;
+
+  color: #124c75;
+
+  font-size: 27px;
+  font-weight: 700;
+}
+
+.student-consult-close-x {
+  display: grid;
+  place-items: center;
+
+  width: 35px;
+  height: 35px;
+
+  border: 0;
+  border-radius: 9px;
+
+  background: transparent;
+  color: #71899a;
+
+  font-size: 20px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.student-consult-close-x:hover {
+  background: #eef4f7;
+}
+
+
+/* =========================================================
+   CUERPO DEL MODAL
+========================================================= */
+
+.student-consult-body {
+  flex: 1;
+  min-height: 0;
+
+  overflow-y: auto;
+
+  padding: 22px 25px;
+
+  background: #ffffff;
+}
+
+.student-consult-loading {
+  flex: 1;
+
+  display: grid;
+  place-items: center;
+
+  min-height: 300px;
+
+  color: #708a9a;
+}
+
+
+/* =========================================================
+   MENSAJE DE SOLO CONSULTA
+========================================================= */
+
+.student-consult-info {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  min-height: 47px;
+
+  padding: 0 13px;
+
+  margin-bottom: 14px;
+
+  border: 1px solid #b9e2ef;
+  border-radius: 11px;
+
+  background: #edfaff;
+
+  color: #276480;
+
+  font-size: 13px;
+}
+
+.student-consult-info strong {
+  color: #145575;
+}
+
+.student-consult-info-icon {
+  display: grid;
+  place-items: center;
+
+  width: 18px;
+  height: 18px;
+
+  flex: 0 0 auto;
+
+  color: #08779d;
+
+  font-size: 13px;
+  font-weight: 800;
+}
+
+
+/* =========================================================
+   LISTA DE DOCUMENTOS
+========================================================= */
+
+.student-consult-documents {
+  display: flex;
+  flex-direction: column;
+
+  gap: 10px;
+}
+
+.student-consult-document {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 18px;
+
+  min-height: 74px;
+
+  padding: 13px 14px;
+
+  border: 1px solid #cbdde7;
+  border-radius: 12px;
+
+  background: #ffffff;
+}
+
+.student-consult-document-left {
+  display: flex;
+  align-items: center;
+
+  gap: 13px;
+
+  min-width: 0;
+}
+
+.student-consult-document-status {
+  display: grid;
+  place-items: center;
+
+  width: 34px;
+  height: 34px;
+
+  flex: 0 0 auto;
+
+  border-radius: 10px;
+
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.student-consult-document-status.delivered {
+  background: #dff7ef;
+  color: #18966f;
+}
+
+.student-consult-document-status.pending {
+  background: #fff0d4;
+  color: #c98513;
+}
+
+.student-consult-document-text {
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+
+  min-width: 0;
+}
+
+.student-consult-document-text strong {
+  color: #1c3e57;
+
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.student-consult-document-text span {
+  color: #7791a3;
+
+  font-size: 12px;
+}
+
+
+/* =========================================================
+   BOTÓN DESCARGAR
+========================================================= */
+
+.student-consult-download {
+  min-height: 36px;
+
+  padding: 0 14px;
+
+  flex: 0 0 auto;
+
+  border: 1px solid #abcfe1;
+  border-radius: 9px;
+
+  background: #ffffff;
+  color: #17547a;
+
+  font-size: 12px;
+  font-weight: 800;
+
+  cursor: pointer;
+}
+
+.student-consult-download:hover {
+  background: #eefaff;
+}
+
+.student-consult-pending-text {
+  flex: 0 0 auto;
+
+  padding-right: 10px;
+
+  color: #9a6c20;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   FOOTER DEL MODAL
+========================================================= */
+
+.student-consult-footer {
+  flex: 0 0 auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  min-height: 79px;
+
+  padding: 15px 25px 19px;
+
+  border-top: 1px solid #d7e4eb;
+
+  background: #ffffff;
+}
+
+.student-consult-footer button {
+  min-width: 82px;
+  min-height: 43px;
+
+  padding: 0 17px;
+
+  border: 0;
+  border-radius: 10px;
+
+  background: #0b4c73;
+  color: #ffffff;
+
+  font-size: 14px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 7px 16px
+    rgba(11, 76, 115, 0.18);
+}
+
+.student-consult-footer button:hover {
+  background: #083d5d;
+}
+
+
+/* =========================================================
+   SCROLL DEL MODAL
+========================================================= */
+
+.student-consult-body::-webkit-scrollbar {
+  width: 9px;
+}
+
+.student-consult-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.student-consult-body::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+
+  background: #8b8b8b;
+}
+
+.student-consult-body::-webkit-scrollbar-thumb:hover {
+  background: #6f6f6f;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 900px) {
+  .students-filters {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .student-consult-modal {
+    width: 100%;
+    height: min(650px, 94vh);
+  }
+
+  .student-consult-header {
+    padding: 18px;
+  }
+
+  .student-consult-header h2 {
+    font-size: 22px;
+  }
+
+  .student-consult-body {
+    padding: 16px;
+  }
+
+  .student-consult-footer {
+    padding: 14px 18px;
+  }
+}
+
+@media (max-width: 500px) {
+  .student-consult-overlay {
+    padding: 8px;
+  }
+
+  .student-consult-document {
+    align-items: flex-start;
+  }
+
+  .student-consult-document-left {
+    flex: 1;
+  }
+
+  .student-consult-document-text strong {
+    font-size: 13px;
+  }
+
+  .student-consult-download {
+    padding: 0 10px;
+  }
+}

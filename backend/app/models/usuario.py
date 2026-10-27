@@ -46,6 +46,14 @@ class Usuario(db.Model):
         db.String(20)
     )
 
+    fecha_nacimiento = db.Column(
+        db.Date
+    )
+
+    foto_perfil = db.Column(
+        db.String(255)
+    )
+
     activo = db.Column(
         db.Boolean,
         nullable=False,

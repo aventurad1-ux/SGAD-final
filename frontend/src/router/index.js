@@ -1,19 +1,71 @@
-import { createRouter, createWebHistory } from "vue-router";
+import {
+  createRouter,
+  createWebHistory
+} from "vue-router";
 
-import LoginView from "../views/auth/LoginView.vue";
-import DashboardView from "../views/directora/DashboardView.vue";
-import ReviewInboxView from "../views/directora/ReviewInboxView.vue";
-import RequestsView from "../views/directora/RequestsView.vue";
-import ExpedientesView from "../views/directora/ExpedientesView.vue";
-import CicloEscolarView from "../views/directora/CicloEscolarView.vue";
-import UsuariosPermisosView from "../views/directora/UsuariosPermisosView.vue";
+import LoginView
+  from "../views/auth/LoginView.vue";
+
+import DashboardView
+  from "../views/directora/DashboardView.vue";
+
+import ReviewInboxView
+  from "../views/directora/ReviewInboxView.vue";
+
+import RequestsView
+  from "../views/directora/RequestsView.vue";
+
+import ExpedientesView
+  from "../views/directora/ExpedientesView.vue";
+
+import CicloEscolarView
+  from "../views/directora/CicloEscolarView.vue";
+
+import UsuariosPermisosView
+  from "../views/directora/UsuariosPermisosView.vue";
+
+/*
+ * PERFIL DOCENTE
+ *
+ * Este archivo lo crearemos en el siguiente paso.
+ */
+import TeacherDashboardView
+  from "../views/docente/TeacherDashboardView.vue";
+
+import TeacherStudentsView
+  from "../views/docente/TeacherStudentsView.vue";
+
+import TeacherRequestsView 
+  from "../views/docente/TeacherRequestsView.vue";
+
+import TeacherDocumentsView 
+  from "../views/docente/TeacherDocumentsView.vue";
+
+import TeacherCorrectionsView 
+  from "../views/docente/TeacherCorrectionsView.vue";
+
+import TeacherReceiptsView 
+  from "../views/docente/TeacherReceiptsView.vue";
+
+import TeacherProfileView
+  from "../views/docente/TeacherProfileView.vue";
+
 
 const routes = [
+  // =====================================================
+  // LOGIN
+  // =====================================================
+
   {
     path: "/",
     name: "login",
     component: LoginView
   },
+
+  // =====================================================
+  // DIRECTORA
+  // =====================================================
+
   {
     path: "/directora/dashboard",
     name: "directora-dashboard",
@@ -23,25 +75,28 @@ const routes = [
       role: "Directora"
     }
   },
+
   {
     path: "/directora/revision",
     name: "directora-revision",
     component: ReviewInboxView,
     meta: {
-    requiresAuth: true,
-    role: "Directora"
-  }
-},
-{
+      requiresAuth: true,
+      role: "Directora"
+    }
+  },
+
+  {
     path: "/directora/solicitudes",
     name: "directora-solicitudes",
     component: RequestsView,
     meta: {
-    requiresAuth: true,
-    role: "Directora"
-  }
-},
-{
+      requiresAuth: true,
+      role: "Directora"
+    }
+  },
+
+  {
     path: "/directora/expedientes",
     name: "directora-expedientes",
     component: ExpedientesView,
@@ -50,6 +105,7 @@ const routes = [
       role: "Directora"
     }
   },
+
   {
     path: "/directora/ciclo-escolar",
     name: "directora-ciclo-escolar",
@@ -59,6 +115,7 @@ const routes = [
       role: "Directora"
     }
   },
+
   {
     path: "/directora/usuarios",
     name: "directora-usuarios",
@@ -67,45 +124,179 @@ const routes = [
       requiresAuth: true,
       role: "Directora"
     }
+  },
+
+  // =====================================================
+  // DOCENTE
+  // =====================================================
+
+  {
+    path: "/docente/dashboard",
+    name: "docente-dashboard",
+    component: TeacherDashboardView,
+    meta: {
+      requiresAuth: true,
+      role: "Docente"
+    }
+  },
+  {
+    path: "/docente/estudiantes",
+    name: "docente-estudiantes",
+    component: TeacherStudentsView,
+    meta: {
+      requiresAuth: true,
+      role: "Docente"
+    }
+  },
+  {
+    path: "/docente/solicitudes",
+    name: "docente-solicitudes",
+    component: TeacherRequestsView,
+    meta: {
+      requiresAuth: true,
+      role: "Docente"
+    }
+  },
+  {
+    path: "/docente/documentos",
+    name: "docente-documentos",
+    component: TeacherDocumentsView,
+    meta: {
+      requiresAuth: true,
+      role: "Docente"
+    }
+  },
+  {
+    path: "/docente/correcciones",
+    name: "docente-correcciones",
+    component: TeacherCorrectionsView,
+    meta: {
+      requiresAuth: true,
+      role: "Docente"
+    }
+  },
+  {
+    path: "/docente/comprobantes",
+    name: "docente-comprobantes",
+    component: TeacherReceiptsView,
+    meta: {
+      requiresAuth: true,
+      role: "Docente"
+    }
+  },
+  {
+    path: "/docente/perfil",
+    name: "docente-perfil",
+    component: TeacherProfileView,
+    meta: {
+      requiresAuth: true,
+      role: "Docente"
+    }
+  },
+
+  // =====================================================
+  // RUTA NO ENCONTRADA
+  // =====================================================
+
+  {
+    path: "/:pathMatch(.*)*",
+    redirect: "/"
   }
 
 ];
+
 
 const router = createRouter({
   history: createWebHistory(),
   routes
 });
 
+
 router.beforeEach((to) => {
-  const accessToken = localStorage.getItem("access_token");
-  const usuarioGuardado = localStorage.getItem("usuario");
+  const accessToken =
+    localStorage.getItem(
+      "access_token"
+    );
+
+  const usuarioGuardado =
+    localStorage.getItem(
+      "usuario"
+    );
 
   let usuario = null;
 
   if (usuarioGuardado) {
     try {
-      usuario = JSON.parse(usuarioGuardado);
+      usuario =
+        JSON.parse(
+          usuarioGuardado
+        );
     } catch {
       usuario = null;
     }
   }
 
-  if (to.meta.requiresAuth && !accessToken) {
-    return "/";
-  }
+  // =====================================================
+  // RUTA PROTEGIDA SIN SESIÓN
+  // =====================================================
 
   if (
-    to.meta.role &&
-    (!usuario || usuario.rol !== to.meta.role)
+    to.meta.requiresAuth &&
+    (!accessToken || !usuario)
   ) {
     return "/";
   }
 
-  if (to.path === "/" && accessToken && usuario) {
-    if (usuario.rol === "Directora") {
+  // =====================================================
+  // VALIDAR ROL
+  // =====================================================
+
+  if (
+    to.meta.role &&
+    usuario?.rol !==
+      to.meta.role
+  ) {
+    if (
+      usuario?.rol ===
+      "Directora"
+    ) {
       return "/directora/dashboard";
+    }
+
+    if (
+      usuario?.rol ===
+      "Docente"
+    ) {
+      return "/docente/dashboard";
+    }
+
+    return "/";
+  }
+
+  // =====================================================
+  // USUARIO AUTENTICADO INTENTA VOLVER AL LOGIN
+  // =====================================================
+
+  if (
+    to.path === "/" &&
+    accessToken &&
+    usuario
+  ) {
+    if (
+      usuario.rol ===
+      "Directora"
+    ) {
+      return "/directora/dashboard";
+    }
+
+    if (
+      usuario.rol ===
+      "Docente"
+    ) {
+      return "/docente/dashboard";
     }
   }
 });
+
 
 export default router;
