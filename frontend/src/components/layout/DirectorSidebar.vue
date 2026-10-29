@@ -127,8 +127,8 @@
         </span>
       </a>
 
-      <a
-        href="#"
+      <RouterLink
+        to="/directora/papelera"
         class="menu-item"
       >
         <span class="menu-icon">♻</span>
@@ -136,7 +136,7 @@
         <span class="menu-text">
           Papelera
         </span>
-      </a>
+      </RouterLink>
 
       <p class="menu-section">
         Seguridad

@@ -27,6 +27,9 @@ import UsuariosPermisosView
 import RepositoryView 
   from "../views/directora/RepositoryView.vue";
 
+import TrashView 
+  from "../views/directora/TrashView.vue";
+
 /*
  * PERFIL DOCENTE
  *
@@ -137,7 +140,16 @@ const routes = [
       role: "Directora"
     }
   },
-  
+  {
+    path: "/directora/papelera",
+    name: "directora-papelera",
+    component: TrashView,
+    meta: {
+      requiresAuth: true,
+      role: "Directora"
+    }
+  },
+
   // =====================================================
   // DOCENTE
   // =====================================================
