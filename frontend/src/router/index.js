@@ -30,6 +30,8 @@ import RepositoryView
 import TrashView 
   from "../views/directora/TrashView.vue";
 
+import PerfilDirectoraView
+  from "../views/directora/PerfilDirectoraView.vue";
 /*
  * PERFIL DOCENTE
  *
@@ -149,6 +151,33 @@ const routes = [
       role: "Directora"
     }
   },
+
+  
+   {
+    path: "/directora/perfil",
+    name: "directora-perfil",
+    component: PerfilDirectoraView,
+    meta: {
+      requiresAuth: true,
+      role: "Directora"
+    }
+  },
+
+  // PERFIL DE LA DIRECTORA
+  {
+    path: "/directora/perfil",
+    name: "directora-perfil",
+    component: PerfilDirectoraView,
+    meta: {
+      requiresAuth: true,
+      role: "Directora"
+    }
+  },
+
+  // =====================================================
+  // DOCENTE
+  // =====================================================
+
 
   // =====================================================
   // DOCENTE

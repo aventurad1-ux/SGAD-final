@@ -56,6 +56,11 @@ from app.routes.notificaciones import (
     notificaciones_bp,
 )
 
+from app.routes.perfil_directora import (
+    perfil_directora_bp,
+)
+
+
 def create_app():
     app = Flask(__name__)
 
@@ -177,4 +182,7 @@ def create_app():
         notificaciones_bp
     )
 
+    app.register_blueprint(
+        perfil_directora_bp
+    )
     return app

@@ -169,9 +169,12 @@
            PERFIL
       =========================================== -->
 
+
       <button
         class="profile-summary"
         type="button"
+        title="Ir a mi perfil"
+        @click="$router.push('/directora/perfil')"
       >
         <div class="profile-avatar">
           {{ iniciales }}
@@ -189,6 +192,7 @@
       </button>
     </div>
   </header>
+
 </template>
 
 
