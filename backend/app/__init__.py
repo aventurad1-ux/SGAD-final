@@ -48,6 +48,9 @@ from app.routes.repositorio import (
     repositorio_bp,
 )
 
+from app.routes.papelera import (
+    papelera_bp
+)
 
 def create_app():
     app = Flask(__name__)
@@ -161,5 +164,9 @@ def create_app():
     app.register_blueprint(
     repositorio_bp
      )
+
+    app.register_blueprint(
+        papelera_bp
+    )
 
     return app
