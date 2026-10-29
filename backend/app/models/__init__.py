@@ -20,6 +20,7 @@ from .version_documento_estudiante import VersionDocumentoEstudiante
 from .categoria_repositorio import CategoriaRepositorio
 from .documento_institucional import DocumentoInstitucional
 from .version_documento_institucional import VersionDocumentoInstitucional
+from .notificacion import Notificacion
 
 
 __all__ = [
@@ -44,5 +45,6 @@ __all__ = [
     "VersionDocumentoEstudiante",
     "CategoriaRepositorio",
     "DocumentoInstitucional",
-    "VersionDocumentoInstitucional"
+    "VersionDocumentoInstitucional",
+    "Notificacion"
 ]
