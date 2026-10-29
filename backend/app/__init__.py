@@ -44,6 +44,11 @@ from app.routes.docente_perfil import (
     docente_perfil_bp,
 )
 
+# NUEVO: Módulo de respaldos
+from app.routes.respaldos import (
+    respaldos_bp,
+)
+
 
 def create_app():
     app = Flask(__name__)
@@ -152,6 +157,11 @@ def create_app():
 
     app.register_blueprint(
         docente_perfil_bp
+    )
+
+    # NUEVO: Registrar las rutas de respaldos
+    app.register_blueprint(
+        respaldos_bp
     )
 
     return app
