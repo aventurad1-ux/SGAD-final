@@ -44,6 +44,10 @@ from app.routes.docente_perfil import (
     docente_perfil_bp,
 )
 
+from app.routes.perfil_directora import (
+    perfil_directora_bp,
+)
+
 
 def create_app():
     app = Flask(__name__)
@@ -154,4 +158,7 @@ def create_app():
         docente_perfil_bp
     )
 
+    app.register_blueprint(
+        perfil_directora_bp
+    )
     return app
