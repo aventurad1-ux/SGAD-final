@@ -24,6 +24,9 @@ import CicloEscolarView
 import UsuariosPermisosView
   from "../views/directora/UsuariosPermisosView.vue";
 
+import RepositoryView 
+  from "../views/directora/RepositoryView.vue";
+
 /*
  * PERFIL DOCENTE
  *
@@ -125,7 +128,16 @@ const routes = [
       role: "Directora"
     }
   },
-
+  {
+    path: "/directora/repositorio",
+    name: "directora-repositorio",
+    component: RepositoryView,
+    meta: {
+      requiresAuth: true,
+      role: "Directora"
+    }
+  },
+  
   // =====================================================
   // DOCENTE
   // =====================================================

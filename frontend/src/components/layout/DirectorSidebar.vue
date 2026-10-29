@@ -49,8 +49,8 @@
         </span>
       </RouterLink>
 
-      <a
-        href="#"
+      <RouterLink
+        to="/directora/repositorio"
         class="menu-item"
       >
         <span class="menu-icon">▤</span>
@@ -58,7 +58,7 @@
         <span class="menu-text">
           Repositorio institucional
         </span>
-      </a>
+      </RouterLink>
 
       <p class="menu-section">
         Gestión escolar
