@@ -1,0 +1,307 @@
+.reports-page {
+  padding:30px;
+  min-height:100%;
+  background:#f1f7fa;
+  color:#123e60;
+  font-family:inherit}
+
+.reports-header {
+  margin-bottom:24px}
+.reports-eyebrow {
+  color:#5481a0;
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:2.4px;
+  margin:0 0 10px}
+
+.reports-header h1 {
+  font-size:40px;
+  line-height:1.15;
+  margin:0 0 12px;
+  color:#104771}
+.reports-header>p:last-child,.section-heading p {
+  color:#60819a;
+  margin:0}
+
+.reports-card {
+  background:#fff;
+  border:1px solid #d5e7ee;
+  border-radius:20px;
+  padding:26px;
+  margin-bottom:24px;
+  box-shadow:0 8px 22px rgba(16,71,113,.035)}
+
+.reports-card h2 {
+  margin:0 0 10px;
+  font-size:25px;
+  color:#104771}
+.filters {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:18px 20px;
+  margin-bottom:23px}
+
+.filters label,.reports-search {
+  display:flex;
+  flex-direction:column;
+  gap:9px;
+  font-weight:700;
+  color:#0a3654}
+
+.filters select,.filters input,.reports-search input {
+  padding:13px 15px;
+  border:1px solid #ccdfeb;
+  border-radius:11px;
+  background:#fff;
+  color:#123e60;
+  width:100%;
+  box-sizing:border-box;
+  font:inherit;
+  min-height:50px}
+
+.filters select:disabled {
+  color:#617d91;
+  background:#f9fbfc;
+  cursor:not-allowed}
+.required {
+  color:#bc3551}
+
+.reports-page button {
+  background:#194e76;
+  color:#fff;
+  padding:12px 19px;
+  border:0;
+  border-radius:10px;
+  cursor:pointer;
+  font:inherit;
+  font-weight:600}
+
+.reports-page button:hover:not(:disabled) {
+  filter:brightness(1.08)}
+.reports-page button:disabled {
+  opacity:.55;
+  cursor:not-allowed}
+
+.reports-actions,.export-actions {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap}
+.reports-hint,.reports-footnote {
+  color:#668399;
+  font-size:14px;
+  line-height:1.5}
+
+.section-heading {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  margin-bottom:22px}
+.section-heading h2 {
+  margin-bottom:7px}
+
+.reports-page .button-secondary {
+  background:#e6f3f9;
+  color:#12456a;
+  border:1px solid #b9dcea}
+.reports-search {
+  margin:0 0 22px;
+  max-width:460px}
+
+.stats {
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:16px;
+  margin-bottom:23px}
+.stat-card {
+  padding:19px 20px;
+  border-radius:14px;
+  background:#eaf6fb;
+  min-width:0}
+
+.stat-card span {
+  display:block;
+  font-size:13px;
+  margin-bottom:7px}
+.stat-card strong {
+  font-size:30px;
+  font-weight:800;
+  color:#0d4068}
+
+.table-scroll {
+  overflow-x:auto}
+.reports-page table {
+  width:100%;
+  border-collapse:collapse;
+  font-size:14px}
+.reports-page th,.reports-page td {
+  text-align:left;
+  padding:14px;
+  border-bottom:1px solid #e1edf2;
+  vertical-align:middle}
+
+.reports-page th {
+  background:#f1f7fa;
+  color:#123e60;
+  white-space:nowrap}
+.progress {
+  background:#e2edf1;
+  height:8px;
+  border-radius:9px;
+  overflow:hidden;
+  margin-bottom:6px;
+  min-width:100px}
+.progress-bar {
+  height:100%;
+  background:#23aeb9;
+  border-radius:9px}
+
+.reports-page .small-button {
+  padding:8px 13px}
+.empty-row {
+  text-align:center!important;
+  color:#668399}
+.error-message {
+  background:#fff0ef;
+  color:#a83232;
+  padding:13px 16px;
+  border-radius:10px;
+  margin-top:18px}
+
+.reports-footnote {
+  margin:17px 0 0}
+@media(max-width:900px) {
+  .reports-page {
+  padding:18px}
+.filters {
+  grid-template-columns:1fr}
+.stats {
+  grid-template-columns:repeat(2,minmax(0,1fr))}
+.section-heading {
+  align-items:flex-start;
+  flex-direction:column}
+}
+
+@media(max-width:540px) {
+  .reports-header h1 {
+  font-size:32px}
+.reports-card {
+  padding:18px}
+.stats {
+  grid-template-columns:1fr}
+}
+
+/* Mantiene el asterisco junto al título del filtro */
+.field-label {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+/* Vista previa institucional: reproduce la estructura del prototipo SGAD. */
+.reports-page .institutional-report { padding: 26px; }
+.report-document-heading { display: flex; align-items: center; gap: 20px; }
+.report-school-logo { width: 58px; height: 58px; object-fit: contain; flex: 0 0 auto; }
+.report-document-heading h2 { margin: 0 0 6px; font-size: 24px; color: #104771; }
+.report-document-heading p { margin: 0; color: #63809a; font-size: 13px; }
+.report-document-rule { height: 2px; background: #194e76; margin: 20px 0; }
+.report-record-count { margin: 0 0 18px; font-size: 15px; color: #123e60; }
+.reports-page .report-document-table th { text-transform: uppercase; letter-spacing: 1px; font-size: 11px; color: #60809c; background: #f1f7fa; }
+.reports-page .report-document-table td { padding: 17px 15px; }
+.report-document-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 23px; }
+@media (max-width: 540px) {
+  .report-document-heading { align-items: flex-start; gap: 12px; }
+  .report-school-logo { width: 44px; height: 44px; }
+  .report-document-heading h2 { font-size: 20px; }
+}
+@media print {
+  .report-document-actions { display: none !important; }
+  .reports-page .institutional-report { width: 100% !important; }
+}
+
+/* Un solo asterisco junto al título obligatorio */
+.report-required { color: #bc3551; font-weight: 700; }
+
+/* Impresión limpia y compacta, como el prototipo institucional */
+@media print {
+  @page { size: A4 portrait; margin: 12mm; }
+
+  html, body, #app { height: auto !important; min-height: 0 !important; overflow: visible !important; margin: 0 !important; padding: 0 !important; background: #fff !important; }
+  body * { visibility: hidden !important; }
+  .reports-result, .reports-result * { visibility: visible !important; }
+  .reports-result {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-height: 0 !important;
+    height: auto !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: #fff !important;
+    overflow: visible !important;
+  }
+  .reports-page .institutional-report { padding: 0 !important; }
+  .no-print, .report-document-actions, .export-actions, .reports-search { display: none !important; visibility: hidden !important; }
+  .report-document-heading { display: block !important; margin: 0 0 10px !important; }
+  .report-school-logo { display: block !important; width: 40px !important; height: 40px !important; margin-bottom: 5px !important; }
+  .report-document-heading h2 { font-size: 18px !important; margin: 0 0 3px !important; }
+  .report-document-heading p { font-size: 10px !important; margin: 0 !important; }
+  .report-document-rule { margin: 10px 0 !important; }
+  .report-record-count { margin: 10px 0 12px !important; font-size: 11px !important; }
+  .table-scroll { overflow: visible !important; }
+  .reports-page .report-document-table { width: 100% !important; table-layout: fixed !important; font-size: 10px !important; }
+  .reports-page .report-document-table th { font-size: 9px !important; padding: 8px 7px !important; white-space: normal !important; }
+  .reports-page .report-document-table td { font-size: 10px !important; padding: 9px 7px !important; overflow-wrap: anywhere !important; }
+  .reports-page tr { break-inside: avoid !important; page-break-inside: avoid !important; }
+  .reports-page thead { display: table-header-group !important; }
+  .reports-page .stats { grid-template-columns: repeat(4, 1fr); }
+  .reports-page .stat-card { padding: 9px !important; }
+  .reports-page .stat-card strong { font-size: 16px !important; }
+  .reports-page th, .reports-page td { font-size: 10px !important; padding: 7px !important; }
+}
+
+/* El reporte de cumplimiento muestra un registro por destinatario. */
+.report-compliance-table { table-layout: auto; }
+.report-compliance-table td { overflow-wrap: anywhere; }
+@media print {
+  .reports-page .report-compliance-table { table-layout: fixed !important; font-size: 9px !important; }
+  .reports-page .report-compliance-table th { font-size: 8px !important; padding: 6px 4px !important; }
+  .reports-page .report-compliance-table td { font-size: 9px !important; padding: 7px 4px !important; }
+}
+
+/* Integración de Reportes con el layout de Dirección */
+@media screen {
+  .director-content > .reports-page {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+}
+
+/* Ocultar navegación al imprimir los reportes */
+@media print {
+  .director-sidebar,
+  .director-topbar {
+    display: none !important;
+  }
+
+  .director-layout,
+  .director-main,
+  .director-content {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+}
