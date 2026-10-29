@@ -52,6 +52,10 @@ from app.routes.papelera import (
     papelera_bp
 )
 
+from app.routes.notificaciones import (
+    notificaciones_bp,
+)
+
 def create_app():
     app = Flask(__name__)
 
@@ -167,6 +171,10 @@ def create_app():
 
     app.register_blueprint(
         papelera_bp
+    )
+
+    app.register_blueprint(
+        notificaciones_bp
     )
 
     return app

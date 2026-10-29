@@ -16,10 +16,12 @@ from werkzeug.utils import secure_filename
 from app.extensions import db
 from app.models import (
     Entrega,
+    Notificacion,
     RevisionEntrega,
     Solicitud,
     SolicitudDestinatario,
     SolicitudRequisito,
+    Usuario,
     VersionEntrega,
 )
 from app.utils.permissions import permission_required
@@ -113,6 +115,88 @@ def nombre_usuario(usuario):
         f"{usuario.nombres or ''} "
         f"{usuario.apellidos or ''}"
     ).strip()
+
+
+def notificar_direccion_entrega(
+    solicitud,
+    docente,
+    version,
+    numero_version,
+):
+    directores = (
+        Usuario.query
+        .filter_by(
+            activo=True
+        )
+        .all()
+    )
+
+    nombre_docente = nombre_usuario(
+        docente
+    )
+
+    for director in directores:
+        if (
+            not director.rol
+            or director.rol.nombre.lower()
+            != "directora"
+        ):
+            continue
+
+        if numero_version == 1:
+            titulo = (
+                "Nueva entrega pendiente de revisión"
+            )
+
+            mensaje = (
+                f"{nombre_docente} realizó una entrega "
+                f"para «{solicitud.titulo}»."
+            )
+
+        else:
+            titulo = (
+                "Corrección enviada para revisión"
+            )
+
+            mensaje = (
+                f"{nombre_docente} envió la versión "
+                f"{numero_version} de «{solicitud.titulo}»."
+            )
+
+        notificacion = Notificacion(
+            id_usuario=(
+                director.id_usuario
+            ),
+            id_ciclo=(
+                solicitud.id_ciclo
+            ),
+            tipo=(
+                "revision_entrega"
+            ),
+            titulo=(
+                titulo
+            ),
+            mensaje=(
+                mensaje
+            ),
+            ruta=(
+                "/directora/revision"
+            ),
+            id_referencia=(
+                version.id_version_entrega
+            ),
+            referencia_tipo=(
+                "version_entrega"
+            ),
+            leida=False,
+            fecha_creacion=(
+                ahora_utc()
+            ),
+        )
+
+        db.session.add(
+            notificacion
+        )
 
 
 def formatos_requisito(requisito):
@@ -1061,6 +1145,22 @@ def realizar_entrega(
 
         db.session.add(
             version
+        )
+
+        # Necesitamos el ID de la versión antes de
+        # crear la notificación relacionada.
+        db.session.flush()
+
+        docente = db.session.get(
+            Usuario,
+            destinatario.id_docente,
+        )
+
+        notificar_direccion_entrega(
+            solicitud=solicitud,
+            docente=docente,
+            version=version,
+            numero_version=numero_version,
         )
 
         destinatario.estado = (

@@ -6,6 +6,10 @@
       <DirectorTopbar />
 
       <main class="director-content">
+        <!-- ==================================================
+             HERO
+        =================================================== -->
+
         <section class="dashboard-hero">
           <div class="hero-text">
             <p class="hero-eyebrow">
@@ -25,12 +29,31 @@
           <button
             class="upload-document-button"
             type="button"
+            @click="irRepositorio"
           >
             Subir documento
           </button>
         </section>
 
+        <!-- ==================================================
+             ERROR
+        =================================================== -->
+
+        <div
+          v-if="error"
+          class="records-alert records-alert-error"
+          style="margin-bottom: 18px;"
+        >
+          {{ error }}
+        </div>
+
+        <!-- ==================================================
+             MÉTRICAS
+        =================================================== -->
+
         <section class="dashboard-metrics">
+          <!-- ESTUDIANTES -->
+
           <article class="metric-card">
             <div class="metric-top">
               <div>
@@ -40,7 +63,7 @@
                 </span>
 
                 <strong class="metric-number">
-                  11
+                  {{ cargando ? "..." : estudiantesMatriculados }}
                 </strong>
               </div>
 
@@ -55,15 +78,21 @@
 
             <div class="metric-footer">
               <span>
-                4 expedientes<br />
-                incompletos
+                {{ expedientesIncompletos }}
+                expediente{{ expedientesIncompletos === 1 ? "" : "s" }}<br />
+                incompleto{{ expedientesIncompletos === 1 ? "" : "s" }}
               </span>
 
-              <button type="button">
+              <button
+                type="button"
+                @click="irExpedientes"
+              >
                 Ver detalles →
               </button>
             </div>
           </article>
+
+          <!-- DOCENTES -->
 
           <article class="metric-card">
             <div class="metric-top">
@@ -74,7 +103,7 @@
                 </span>
 
                 <strong class="metric-number">
-                  4
+                  {{ cargando ? "..." : docentesAsignados }}
                 </strong>
               </div>
 
@@ -89,15 +118,21 @@
 
             <div class="metric-footer">
               <span>
-                6 secciones<br />
-                activas
+                {{ seccionesActivas }}
+                sección{{ seccionesActivas === 1 ? "" : "es" }}<br />
+                activa{{ seccionesActivas === 1 ? "" : "s" }}
               </span>
 
-              <button type="button">
+              <button
+                type="button"
+                @click="irCicloEscolar"
+              >
                 Ver detalles →
               </button>
             </div>
           </article>
+
+          <!-- PENDIENTES -->
 
           <article class="metric-card">
             <div class="metric-top">
@@ -108,7 +143,7 @@
                 </span>
 
                 <strong class="metric-number">
-                  1
+                  {{ cargando ? "..." : pendientesRevision }}
                 </strong>
               </div>
 
@@ -127,11 +162,16 @@
                 atención
               </span>
 
-              <button type="button">
+              <button
+                type="button"
+                @click="irRevision"
+              >
                 Ver detalles →
               </button>
             </div>
           </article>
+
+          <!-- SOLICITUDES -->
 
           <article class="metric-card">
             <div class="metric-top">
@@ -142,7 +182,7 @@
                 </span>
 
                 <strong class="metric-number">
-                  3
+                  {{ cargando ? "..." : solicitudesAbiertas }}
                 </strong>
               </div>
 
@@ -157,15 +197,23 @@
 
             <div class="metric-footer">
               <span>
-                3 vigentes
+                {{ solicitudesAbiertas }}
+                vigente{{ solicitudesAbiertas === 1 ? "" : "s" }}
               </span>
 
-              <button type="button">
+              <button
+                type="button"
+                @click="irSolicitudes"
+              >
                 Ver detalles →
               </button>
             </div>
           </article>
         </section>
+
+        <!-- ==================================================
+             PARTE INFERIOR
+        =================================================== -->
 
         <section class="dashboard-lower-grid">
           <article class="dashboard-card requests-card">
@@ -183,6 +231,7 @@
               <button
                 type="button"
                 class="create-request-button"
+                @click="irSolicitudes"
               >
                 Crear<br />
                 solicitud
@@ -211,7 +260,11 @@
                 </div>
               </div>
 
-              <button type="button" class="request-view-button">
+              <button
+                type="button"
+                class="request-view-button"
+                @click="irSolicitudes"
+              >
                 Ver
               </button>
             </div>
@@ -238,7 +291,11 @@
                 </div>
               </div>
 
-              <button type="button" class="request-view-button">
+              <button
+                type="button"
+                class="request-view-button"
+                @click="irSolicitudes"
+              >
                 Ver
               </button>
             </div>
@@ -265,11 +322,19 @@
                 </div>
               </div>
 
-              <button type="button" class="request-view-button">
+              <button
+                type="button"
+                class="request-view-button"
+                @click="irSolicitudes"
+              >
                 Ver
               </button>
             </div>
           </article>
+
+          <!-- ==================================================
+               ACTIVIDAD
+          =================================================== -->
 
           <article class="dashboard-card activity-card">
             <div class="dashboard-card-header">
@@ -382,8 +447,437 @@
   </div>
 </template>
 
+
 <script setup>
+import {
+  ref,
+  onMounted,
+  onBeforeUnmount
+} from "vue";
+
+import {
+  useRouter
+} from "vue-router";
+
 import DirectorSidebar from "../../components/layout/DirectorSidebar.vue";
 import DirectorTopbar from "../../components/layout/DirectorTopbar.vue";
+
+import {
+  obtenerCiclos
+} from "../../services/ciclosService";
+
+import {
+  obtenerSolicitudes
+} from "../../services/requestsService";
+
+import {
+  obtenerBandejaRevision
+} from "../../services/reviewService";
+
+import {
+  obtenerExpedientes
+} from "../../services/expedientesService";
+
 import "../../assets/css/director.css";
+
+
+const router = useRouter();
+
+
+const cargando =
+  ref(true);
+
+const error =
+  ref("");
+
+
+const estudiantesMatriculados =
+  ref(0);
+
+const docentesAsignados =
+  ref(0);
+
+const pendientesRevision =
+  ref(0);
+
+const solicitudesAbiertas =
+  ref(0);
+
+const expedientesIncompletos =
+  ref(0);
+
+const seccionesActivas =
+  ref(0);
+
+
+/* =========================================================
+   CICLO SELECCIONADO
+========================================================= */
+
+function obtenerIdCicloSeleccionado() {
+  const valor =
+    localStorage.getItem(
+      "sgad_ciclo"
+    );
+
+  if (!valor) {
+    return null;
+  }
+
+  try {
+    const parsed =
+      JSON.parse(valor);
+
+    if (
+      typeof parsed === "number"
+    ) {
+      return parsed;
+    }
+
+    if (
+      parsed &&
+      typeof parsed === "object"
+    ) {
+      return Number(
+        parsed.id_ciclo ||
+        parsed.id ||
+        0
+      ) || null;
+    }
+
+  } catch {
+    const numero =
+      Number(valor);
+
+    return numero || null;
+  }
+
+  return null;
+}
+
+
+/* =========================================================
+   UTILIDAD PARA OBTENER LISTAS
+========================================================= */
+
+function extraerLista(
+  data,
+  posiblesClaves = []
+) {
+  if (
+    Array.isArray(data)
+  ) {
+    return data;
+  }
+
+  for (
+    const clave
+    of posiblesClaves
+  ) {
+    if (
+      Array.isArray(
+        data?.[clave]
+      )
+    ) {
+      return data[clave];
+    }
+  }
+
+  return [];
+}
+
+
+/* =========================================================
+   ESTADO DE SOLICITUD
+========================================================= */
+
+function solicitudEstaAbierta(
+  solicitud
+) {
+  const estado =
+    String(
+      solicitud?.estado ||
+      ""
+    )
+      .trim()
+      .toLowerCase();
+
+  const estadosCerrados = [
+    "cerrada",
+    "cerrado",
+    "finalizada",
+    "finalizado"
+  ];
+
+  return !estadosCerrados.includes(
+    estado
+  );
+}
+
+
+/* =========================================================
+   CARGAR DASHBOARD
+========================================================= */
+
+async function cargarDashboard() {
+  cargando.value = true;
+  error.value = "";
+
+  try {
+    const idCiclo =
+      obtenerIdCicloSeleccionado();
+
+    const [
+      dataCiclos,
+      dataSolicitudes,
+      dataRevision,
+      dataExpedientes
+    ] = await Promise.all([
+      obtenerCiclos(
+        idCiclo
+      ),
+
+      obtenerSolicitudes(
+        idCiclo
+      ),
+
+      obtenerBandejaRevision(),
+
+      obtenerExpedientes(
+        idCiclo
+      )
+    ]);
+
+
+    /* =====================================================
+       CICLO / SECCIONES
+    ===================================================== */
+
+    const secciones =
+      Array.isArray(
+        dataCiclos?.secciones
+      )
+        ? dataCiclos.secciones
+        : [];
+
+
+    const seccionesActivasLista =
+      secciones.filter(
+        (seccion) =>
+          seccion.activo !== false
+      );
+
+
+    seccionesActivas.value =
+      seccionesActivasLista.length;
+
+
+    estudiantesMatriculados.value =
+      seccionesActivasLista.reduce(
+        (
+          total,
+          seccion
+        ) => {
+          return (
+            total +
+            Number(
+              seccion.estudiantes ||
+              0
+            )
+          );
+        },
+        0
+      );
+
+
+    const docentesUnicos =
+      new Set(
+        seccionesActivasLista
+          .map(
+            (seccion) =>
+              seccion.id_docente
+          )
+          .filter(
+            Boolean
+          )
+      );
+
+
+    docentesAsignados.value =
+      docentesUnicos.size;
+
+
+    /* =====================================================
+       SOLICITUDES
+    ===================================================== */
+
+    const solicitudes =
+      extraerLista(
+        dataSolicitudes,
+        [
+          "solicitudes",
+          "items",
+          "data"
+        ]
+      );
+
+
+    solicitudesAbiertas.value =
+      solicitudes.filter(
+        solicitudEstaAbierta
+      ).length;
+
+
+    /* =====================================================
+       BANDEJA DE REVISIÓN
+    ===================================================== */
+
+    const revisiones =
+      extraerLista(
+        dataRevision,
+        [
+          "entregas",
+          "revision",
+          "documentos",
+          "pendientes",
+          "items"
+        ]
+      );
+
+
+    pendientesRevision.value =
+      revisiones.length;
+
+
+    /* =====================================================
+       EXPEDIENTES INCOMPLETOS
+    ===================================================== */
+
+    const expedientes =
+      extraerLista(
+        dataExpedientes,
+        [
+          "expedientes",
+          "estudiantes",
+          "items"
+        ]
+      );
+
+
+    expedientesIncompletos.value =
+      expedientes.filter(
+        (item) => {
+          const estado =
+            String(
+              item.estado_expediente ||
+              item.estado ||
+              ""
+            )
+              .trim()
+              .toLowerCase();
+
+          if (
+            estado === "incompleto"
+          ) {
+            return true;
+          }
+
+          if (
+            item.completo === false
+          ) {
+            return true;
+          }
+
+          return false;
+        }
+      ).length;
+
+  } catch (err) {
+    console.error(
+      "ERROR DASHBOARD:",
+      err
+    );
+
+    error.value =
+      err.response?.data?.mensaje ||
+      "No fue posible cargar los indicadores del panel.";
+
+  } finally {
+    cargando.value = false;
+  }
+}
+
+
+/* =========================================================
+   CAMBIO DE CICLO
+========================================================= */
+
+async function manejarCambioCiclo() {
+  await cargarDashboard();
+}
+
+
+/* =========================================================
+   NAVEGACIÓN
+========================================================= */
+
+function irExpedientes() {
+  router.push(
+    "/directora/expedientes"
+  );
+}
+
+
+function irCicloEscolar() {
+  router.push(
+    "/directora/ciclo-escolar"
+  );
+}
+
+
+function irRevision() {
+  router.push(
+    "/directora/revision"
+  );
+}
+
+
+function irSolicitudes() {
+  router.push(
+    "/directora/solicitudes"
+  );
+}
+
+
+function irRepositorio() {
+  router.push(
+    "/directora/repositorio"
+  );
+}
+
+
+/* =========================================================
+   CICLO DE VIDA
+========================================================= */
+
+onMounted(
+  async () => {
+    window.addEventListener(
+      "sgad-cycle-changed",
+      manejarCambioCiclo
+    );
+
+    await cargarDashboard();
+  }
+);
+
+
+onBeforeUnmount(
+  () => {
+    window.removeEventListener(
+      "sgad-cycle-changed",
+      manejarCambioCiclo
+    );
+  }
+);
 </script>
