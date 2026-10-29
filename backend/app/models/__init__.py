@@ -17,6 +17,9 @@ from .matricula import Matricula
 from .requisito_expediente import RequisitoExpediente
 from .documento_estudiante import DocumentoEstudiante
 from .version_documento_estudiante import VersionDocumentoEstudiante
+from .categoria_repositorio import CategoriaRepositorio
+from .documento_institucional import DocumentoInstitucional
+from .version_documento_institucional import VersionDocumentoInstitucional
 
 
 __all__ = [
@@ -38,5 +41,8 @@ __all__ = [
     "Matricula",
     "RequisitoExpediente",
     "DocumentoEstudiante",
-    "VersionDocumentoEstudiante"
+    "VersionDocumentoEstudiante",
+    "CategoriaRepositorio",
+    "DocumentoInstitucional",
+    "VersionDocumentoInstitucional"
 ]
