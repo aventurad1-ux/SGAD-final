@@ -4,6 +4,7 @@ from app.models.permiso import Permiso
 from app.models.usuario import Usuario
 from app.models.usuario_permiso import UsuarioPermiso
 from app.models.refresh_token import RefreshToken
+
 from .ciclo_escolar import CicloEscolar
 from .solicitud import Solicitud
 from .solicitud_destinatario import SolicitudDestinatario
@@ -21,6 +22,9 @@ from .categoria_repositorio import CategoriaRepositorio
 from .documento_institucional import DocumentoInstitucional
 from .version_documento_institucional import VersionDocumentoInstitucional
 from .notificacion import Notificacion
+
+# NUEVO: Modelo del historial de respaldos
+from .respaldo import Respaldo
 
 
 __all__ = [
@@ -47,4 +51,5 @@ __all__ = [
     "DocumentoInstitucional",
     "VersionDocumentoInstitucional",
     "Notificacion"
+    "Respaldo"
 ]

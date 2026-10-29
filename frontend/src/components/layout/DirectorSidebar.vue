@@ -178,17 +178,16 @@
         Seguridad
       </p>
 
-      <a
-        href="#"
-        class="menu-item"
-        @click.prevent
-      >
-        <span class="menu-icon">▥</span>
+      <RouterLink
+         to="/directora/respaldos"
+         class="menu-item"
+         >
+         <span class="menu-icon">▥</span>
 
-        <span class="menu-text">
-          Copias de seguridad
-        </span>
-      </a>
+         <span class="menu-text">
+           Copias de seguridad
+         </span>
+      </RouterLink>
 
       <a
         href="#"

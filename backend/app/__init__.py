@@ -60,6 +60,11 @@ from app.routes.perfil_directora import (
     perfil_directora_bp,
 )
 
+# NUEVO: Módulo de respaldos
+from app.routes.respaldos import (
+    respaldos_bp,
+)
+
 
 def create_app():
     app = Flask(__name__)
@@ -185,4 +190,9 @@ def create_app():
     app.register_blueprint(
         perfil_directora_bp
     )
+    # NUEVO: Registrar las rutas de respaldos
+    app.register_blueprint(
+        respaldos_bp
+    )
+
     return app

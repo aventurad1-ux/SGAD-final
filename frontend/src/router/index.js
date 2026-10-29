@@ -35,6 +35,9 @@ import PerfilDirectoraView
 
 import ReportsView
   from "../views/directora/ReportsView.vue";
+
+import BackupView
+  from "../views/directora/BackupView.vue";
   
 /*
  * PERFIL DOCENTE
@@ -176,6 +179,16 @@ const routes = [
       role: "Directora"
     }
   },
+
+  {
+    path: "/directora/respaldos",
+    name: "directora-respaldos",
+    component: BackupView,
+    meta: {
+      requiresAuth: true,
+      role: "Directora"
+    }
+ },
 
   // =====================================================
   // DOCENTE
