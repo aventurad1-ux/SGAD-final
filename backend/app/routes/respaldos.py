@@ -1,16 +1,33 @@
 from pathlib import Path
 
-from flask import Blueprint, jsonify, send_file
-from flask_jwt_extended import get_jwt_identity
+from flask import (
+    Blueprint,
+    jsonify,
+    send_file,
+)
+from flask_jwt_extended import (
+    get_jwt_identity,
+)
 
 from app.extensions import db
-from app.models.respaldo import Respaldo
-from app.services.respaldo_service import generar_respaldo
-from app.services.bitacora_service import registrar_actividad
-from app.utils.permissions import permission_required
+from app.models.respaldo import (
+    Respaldo,
+)
+from app.services.bitacora_service import (
+    registrar_actividad,
+)
+from app.services.respaldo_service import (
+    generar_respaldo,
+)
+from app.services.spaces_service import (
+    descargar_respaldo_spaces,
+    subir_respaldo_spaces,
+)
+from app.utils.permissions import (
+    permission_required,
+)
 
 
-# Crear el módulo de respaldos
 respaldos_bp = Blueprint(
     "respaldos",
     __name__,
@@ -18,9 +35,11 @@ respaldos_bp = Blueprint(
 )
 
 
-# Carpeta donde se guardan los archivos ZIP
 CARPETA_RESPALDOS = (
-    Path(__file__).resolve().parents[2] / "backups"
+    Path(__file__)
+    .resolve()
+    .parents[2]
+    / "backups"
 ).resolve()
 
 
@@ -29,13 +48,15 @@ CARPETA_RESPALDOS = (
 # ==========================================
 
 @respaldos_bp.post("")
-@permission_required("respaldos.generar")
+@permission_required(
+    "respaldos.generar"
+)
 def crear_respaldo():
 
-    # Obtener el usuario que inició sesión
-    usuario_id = int(get_jwt_identity())
+    usuario_id = int(
+        get_jwt_identity()
+    )
 
-    # Registrar el intento antes de generar el ZIP
     respaldo = Respaldo(
         id_usuario=usuario_id,
         tipo="Completo",
@@ -43,65 +64,170 @@ def crear_respaldo():
     )
 
     try:
-        db.session.add(respaldo)
+        db.session.add(
+            respaldo
+        )
+
         db.session.commit()
 
     except Exception:
         db.session.rollback()
 
         return jsonify({
-            "mensaje": "No fue posible registrar el respaldo."
+            "mensaje":
+                "No fue posible registrar "
+                "el respaldo."
         }), 500
 
-    # Generar el respaldo
     try:
-        resultado = generar_respaldo()
+        # ----------------------------------
+        # GENERAR ZIP LOCAL
+        # ----------------------------------
 
-        # Actualizar el historial
-        respaldo.nombre_archivo = resultado["nombre"]
-        respaldo.tamano = resultado["tamano"]
-        respaldo.estado = "Completado"
+        resultado = (
+            generar_respaldo()
+        )
 
-        # Registrar la acción en bitácora
+        nombre_archivo = (
+            resultado["nombre"]
+        )
+
+        ruta_local = (
+            CARPETA_RESPALDOS
+            / nombre_archivo
+        ).resolve()
+
+        if (
+            ruta_local.parent
+            != CARPETA_RESPALDOS
+        ):
+            raise RuntimeError(
+                "La ruta del respaldo "
+                "generado no es válida."
+            )
+
+        if not ruta_local.is_file():
+            raise FileNotFoundError(
+                "El ZIP del respaldo "
+                "no fue encontrado."
+            )
+
+        # ----------------------------------
+        # SUBIR A DIGITALOCEAN SPACES
+        # ----------------------------------
+
+        resultado_spaces = (
+            subir_respaldo_spaces(
+                ruta_local
+            )
+        )
+
+        # ----------------------------------
+        # ACTUALIZAR HISTORIAL
+        # ----------------------------------
+
+        respaldo.nombre_archivo = (
+            nombre_archivo
+        )
+
+        respaldo.tamano = (
+            resultado["tamano"]
+        )
+
+        respaldo.estado = (
+            "Completado"
+        )
+
+        respaldo.mensaje_error = None
+
+        # ----------------------------------
+        # BITÁCORA
+        # ----------------------------------
+
         registrar_actividad(
             id_usuario=usuario_id,
             accion="CREAR_RESPALDO",
-            modulo="Copias de seguridad",
-            registro=respaldo.nombre_archivo,
+            modulo=(
+                "Copias de seguridad"
+            ),
+            registro=(
+                respaldo.nombre_archivo
+            ),
             descripcion=(
-                "Se generó una copia de seguridad "
-                "completa del sistema."
+                "Se generó una copia "
+                "de seguridad completa "
+                "del sistema y se "
+                "almacenó en "
+                "DigitalOcean Spaces."
             )
         )
 
         db.session.commit()
 
         return jsonify({
-            "mensaje": "Respaldo generado correctamente.",
+            "mensaje": (
+                "Respaldo generado y "
+                "almacenado en la nube "
+                "correctamente."
+            ),
+
             "respaldo": {
-                "id_respaldo": respaldo.id_respaldo,
-                "nombre": respaldo.nombre_archivo,
-                "fecha": respaldo.fecha_creacion.isoformat(),
-                "tamano": respaldo.tamano,
-                "tipo": respaldo.tipo,
-                "estado": respaldo.estado
+                "id_respaldo":
+                    respaldo.id_respaldo,
+
+                "nombre":
+                    respaldo.nombre_archivo,
+
+                "fecha":
+                    respaldo
+                    .fecha_creacion
+                    .isoformat(),
+
+                "tamano":
+                    respaldo.tamano,
+
+                "tipo":
+                    respaldo.tipo,
+
+                "estado":
+                    respaldo.estado,
+
+                "almacenamiento":
+                    "DigitalOcean Spaces",
+
+                "objeto_spaces":
+                    resultado_spaces[
+                        "clave"
+                    ],
             }
         }), 201
 
-    except Exception:
+    except Exception as error:
         db.session.rollback()
 
-        # Registrar que ocurrió un error
+        print(
+            "ERROR CREAR RESPALDO:",
+            repr(error)
+        )
+
         try:
-            respaldo = db.session.get(
-                Respaldo,
-                respaldo.id_respaldo
+            respaldo = (
+                db.session.get(
+                    Respaldo,
+                    respaldo.id_respaldo
+                )
             )
 
             if respaldo:
-                respaldo.estado = "Fallido"
+                respaldo.estado = (
+                    "Fallido"
+                )
+
                 respaldo.mensaje_error = (
-                    "No fue posible completar el respaldo."
+                    "No fue posible "
+                    "generar o almacenar "
+                    "el respaldo en "
+                    "DigitalOcean Spaces."
                 )
 
                 db.session.commit()
@@ -110,7 +236,10 @@ def crear_respaldo():
             db.session.rollback()
 
         return jsonify({
-            "mensaje": "No fue posible generar el respaldo."
+            "mensaje": (
+                "No fue posible generar "
+                "y almacenar el respaldo."
+            )
         }), 500
 
 
@@ -119,12 +248,18 @@ def crear_respaldo():
 # ==========================================
 
 @respaldos_bp.get("")
-@permission_required("respaldos.ver")
+@permission_required(
+    "respaldos.ver"
+)
 def listar_respaldos():
 
     registros = (
         Respaldo.query
-        .order_by(Respaldo.fecha_creacion.desc())
+        .order_by(
+            Respaldo
+            .fecha_creacion
+            .desc()
+        )
         .all()
     )
 
@@ -132,8 +267,9 @@ def listar_respaldos():
 
     for respaldo in registros:
 
-        # Obtener el nombre del usuario responsable
-        responsable = "Usuario no disponible"
+        responsable = (
+            "Usuario no disponible"
+        )
 
         if respaldo.usuario:
             responsable = (
@@ -142,14 +278,31 @@ def listar_respaldos():
             )
 
         respaldos.append({
-            "id_respaldo": respaldo.id_respaldo,
-            "nombre": respaldo.nombre_archivo,
-            "fecha": respaldo.fecha_creacion.isoformat(),
-            "tamano": respaldo.tamano,
-            "tipo": respaldo.tipo,
-            "estado": respaldo.estado,
-            "responsable": responsable,
-            "mensaje_error": respaldo.mensaje_error
+            "id_respaldo":
+                respaldo.id_respaldo,
+
+            "nombre":
+                respaldo.nombre_archivo,
+
+            "fecha":
+                respaldo
+                .fecha_creacion
+                .isoformat(),
+
+            "tamano":
+                respaldo.tamano,
+
+            "tipo":
+                respaldo.tipo,
+
+            "estado":
+                respaldo.estado,
+
+            "responsable":
+                responsable,
+
+            "mensaje_error":
+                respaldo.mensaje_error
         })
 
     return jsonify({
@@ -161,56 +314,127 @@ def listar_respaldos():
 # DESCARGAR RESPALDO
 # ==========================================
 
-@respaldos_bp.get("/<nombre>/descargar")
-@permission_required("respaldos.descargar")
-def descargar_respaldo(nombre):
+@respaldos_bp.get(
+    "/<nombre>/descargar"
+)
+@permission_required(
+    "respaldos.descargar"
+)
+def descargar_respaldo(
+    nombre
+):
 
-    usuario_id = int(get_jwt_identity())
+    usuario_id = int(
+        get_jwt_identity()
+    )
 
-    # Validar el nombre del archivo
+    # --------------------------------------
+    # VALIDAR NOMBRE
+    # --------------------------------------
+
     if (
         nombre != Path(nombre).name
-        or not nombre.startswith("respaldo_sgad_")
-        or not nombre.endswith(".zip")
+        or not nombre.startswith(
+            "respaldo_sgad_"
+        )
+        or not nombre.endswith(
+            ".zip"
+        )
     ):
         return jsonify({
-            "mensaje": "Nombre de respaldo no válido."
+            "mensaje":
+                "Nombre de respaldo "
+                "no válido."
         }), 400
 
-    # Comprobar que el respaldo está registrado
-    respaldo = Respaldo.query.filter_by(
-        nombre_archivo=nombre,
-        estado="Completado"
-    ).first()
+    # --------------------------------------
+    # COMPROBAR REGISTRO
+    # --------------------------------------
+
+    respaldo = (
+        Respaldo.query.filter_by(
+            nombre_archivo=nombre,
+            estado="Completado"
+        )
+        .first()
+    )
 
     if not respaldo:
         return jsonify({
-            "mensaje": "El respaldo no está disponible."
+            "mensaje":
+                "El respaldo no está "
+                "disponible."
         }), 404
 
-    archivo = (CARPETA_RESPALDOS / nombre).resolve()
+    archivo = (
+        CARPETA_RESPALDOS
+        / nombre
+    ).resolve()
 
-    # Evitar acceder a archivos fuera de backups
-    if archivo.parent != CARPETA_RESPALDOS:
+    if (
+        archivo.parent
+        != CARPETA_RESPALDOS
+    ):
         return jsonify({
-            "mensaje": "Ruta de respaldo no válida."
+            "mensaje":
+                "Ruta de respaldo "
+                "no válida."
         }), 400
 
-    if not archivo.is_file():
-        return jsonify({
-            "mensaje": "El archivo de respaldo no existe."
-        }), 404
+    # --------------------------------------
+    # SI NO EXISTE LOCALMENTE,
+    # RECUPERAR DESDE SPACES
+    # --------------------------------------
 
-    # Registrar descarga en bitácora
+    if not archivo.is_file():
+
+        try:
+            descargar_respaldo_spaces(
+                nombre,
+                archivo
+            )
+
+        except FileNotFoundError:
+            return jsonify({
+                "mensaje": (
+                    "El respaldo no existe "
+                    "localmente ni en "
+                    "DigitalOcean Spaces."
+                )
+            }), 404
+
+        except Exception as error:
+            print(
+                "ERROR RECUPERAR "
+                "RESPALDO DE SPACES:",
+                repr(error)
+            )
+
+            return jsonify({
+                "mensaje": (
+                    "No fue posible "
+                    "recuperar el respaldo "
+                    "desde la nube."
+                )
+            }), 500
+
+    # --------------------------------------
+    # BITÁCORA
+    # --------------------------------------
+
     try:
         registrar_actividad(
             id_usuario=usuario_id,
-            accion="DESCARGAR_RESPALDO",
-            modulo="Copias de seguridad",
+            accion=(
+                "DESCARGAR_RESPALDO"
+            ),
+            modulo=(
+                "Copias de seguridad"
+            ),
             registro=nombre,
             descripcion=(
-                "Se descargó una copia de seguridad "
-                "del sistema."
+                "Se descargó una copia "
+                "de seguridad del sistema."
             )
         )
 
@@ -225,6 +449,10 @@ def descargar_respaldo(nombre):
                 "la descarga del respaldo."
             )
         }), 500
+
+    # --------------------------------------
+    # ENVIAR ZIP
+    # --------------------------------------
 
     return send_file(
         archivo,
