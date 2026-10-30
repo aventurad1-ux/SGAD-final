@@ -1,6 +1,7 @@
 from app.models.usuario_2fa import Usuario2FA
 from app.services.desafio_2fa import crear_desafio_2fa
 from datetime import datetime, timezone
+from app.services.limites_acceso import limiter
 
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import (
@@ -27,6 +28,7 @@ auth_bp = Blueprint(
 
 
 @auth_bp.post("/login")
+@limiter.limit("5 per minute")
 def login():
     data = request.get_json(silent=True) or {}
 

@@ -22,7 +22,10 @@ from app.extensions import db
 from app.models.usuario import Usuario
 from app.models.usuario_2fa import Usuario2FA
 from app.models.codigo_recuperacion_2fa import CodigoRecuperacion2FA
-from app.services.desafio_2fa import validar_desafio_2fa
+from app.services.desafio_2fa import (
+    validar_desafio_2fa,
+    consumir_desafio_2fa,
+)
 from app.services.totp_service import (
     generar_secreto_totp,
     generar_uri_totp,
@@ -269,7 +272,11 @@ def verificar_2fa():
 
     configuracion.intentos_fallidos = 0
     configuracion.bloqueado_hasta = None
-
+    if not consumir_desafio_2fa(data.get("desafio")):
+        db.session.rollback()
+        return jsonify({
+            "message": "Desafio 2FA utilizado o vencido."
+        }), 401
 
     # Primero generamos el refresh token.
     # Su JTI identificara la sesion en PostgreSQL.
@@ -372,6 +379,12 @@ def recuperar_acceso_2fa():
 
     configuracion.intentos_fallidos = 0
     configuracion.bloqueado_hasta = None
+
+    if not consumir_desafio_2fa(data.get("desafio")):
+        db.session.rollback()
+        return jsonify({
+            "message": "Desafio 2FA utilizado o vencido."
+        }), 401
 
     refresh_token = create_refresh_token(
         identity=str(usuario.id_usuario),

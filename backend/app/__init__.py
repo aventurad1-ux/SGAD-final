@@ -1,8 +1,10 @@
+import os
 from datetime import datetime, timezone
 
 from app.models.refresh_token import RefreshToken
 from app.services.sesion_service import sesion_vigente
 from flask import Flask
+from app.services.limites_acceso import limiter
 
 from config.config import Config
 from app.extensions import (
@@ -81,6 +83,7 @@ def create_app():
     app.config.from_object(
         Config
     )
+    limiter.init_app(app)
 
     db.init_app(app)
 
@@ -133,12 +136,20 @@ def create_app():
 
     from app import models
 
+    origenes_permitidos = [
+        origen.strip()
+        for origen in os.getenv(
+            "CORS_ORIGINS",
+            "http://localhost:5173,http://127.0.0.1:5173"
+        ).split(",")
+        if origen.strip()
+    ]
+
     cors.init_app(
         app,
         resources={
             r"/api/*": {
-                "origins":
-                    "http://localhost:5173"
+                "origins": origenes_permitidos
             }
         }
     )
