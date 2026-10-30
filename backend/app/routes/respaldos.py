@@ -6,6 +6,7 @@ from flask_jwt_extended import get_jwt_identity
 from app.extensions import db
 from app.models.respaldo import Respaldo
 from app.services.respaldo_service import generar_respaldo
+from app.services.bitacora_service import registrar_actividad
 from app.utils.permissions import permission_required
 
 
@@ -60,6 +61,18 @@ def crear_respaldo():
         respaldo.nombre_archivo = resultado["nombre"]
         respaldo.tamano = resultado["tamano"]
         respaldo.estado = "Completado"
+
+        # Registrar la acción en bitácora
+        registrar_actividad(
+            id_usuario=usuario_id,
+            accion="CREAR_RESPALDO",
+            modulo="Copias de seguridad",
+            registro=respaldo.nombre_archivo,
+            descripcion=(
+                "Se generó una copia de seguridad "
+                "completa del sistema."
+            )
+        )
 
         db.session.commit()
 
@@ -152,6 +165,8 @@ def listar_respaldos():
 @permission_required("respaldos.descargar")
 def descargar_respaldo(nombre):
 
+    usuario_id = int(get_jwt_identity())
+
     # Validar el nombre del archivo
     if (
         nombre != Path(nombre).name
@@ -185,6 +200,31 @@ def descargar_respaldo(nombre):
         return jsonify({
             "mensaje": "El archivo de respaldo no existe."
         }), 404
+
+    # Registrar descarga en bitácora
+    try:
+        registrar_actividad(
+            id_usuario=usuario_id,
+            accion="DESCARGAR_RESPALDO",
+            modulo="Copias de seguridad",
+            registro=nombre,
+            descripcion=(
+                "Se descargó una copia de seguridad "
+                "del sistema."
+            )
+        )
+
+        db.session.commit()
+
+    except Exception:
+        db.session.rollback()
+
+        return jsonify({
+            "mensaje": (
+                "No fue posible registrar "
+                "la descarga del respaldo."
+            )
+        }), 500
 
     return send_file(
         archivo,

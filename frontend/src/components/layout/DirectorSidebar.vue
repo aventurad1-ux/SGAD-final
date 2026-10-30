@@ -1,3 +1,4 @@
+
 <template>
   <aside class="director-sidebar">
     <div class="sidebar-brand">
@@ -189,8 +190,8 @@
          </span>
       </RouterLink>
 
-      <a
-        href="#"
+      <RouterLink
+        to="/directora/bitacora"
         class="menu-item"
         @click.prevent
       >
@@ -199,7 +200,7 @@
         <span class="menu-text">
           Bitácora de actividad
         </span>
-      </a>
+      </RouterLink>
     </nav>
 
     <div class="sidebar-footer">

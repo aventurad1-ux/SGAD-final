@@ -1,3 +1,4 @@
+
 from flask import Flask
 
 from config.config import Config
@@ -65,6 +66,10 @@ from app.routes.respaldos import (
     respaldos_bp,
 )
 
+from app.routes.bitacora import (
+    bitacora_bp,
+)
+
 
 def create_app():
     app = Flask(__name__)
@@ -74,10 +79,12 @@ def create_app():
     )
 
     db.init_app(app)
+
     migrate.init_app(
         app,
         db,
     )
+
     jwt.init_app(app)
 
     from app import models
@@ -176,7 +183,7 @@ def create_app():
     )
 
     app.register_blueprint(
-    repositorio_bp
+        repositorio_bp
      )
 
     app.register_blueprint(
@@ -195,4 +202,9 @@ def create_app():
         respaldos_bp
     )
 
+    app.register_blueprint(
+        bitacora_bp
+    )
+
     return app
+

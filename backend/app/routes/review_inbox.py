@@ -9,6 +9,7 @@ from app.models import (
     VersionEntrega,
     RevisionEntrega,
 )
+from app.services.bitacora_service import registrar_actividad
 from app.utils.permissions import permission_required
 
 
@@ -102,6 +103,10 @@ def listar_entregas_revision():
     }), 200
 
 
+# =========================================================
+# APROBAR ENTREGA
+# =========================================================
+
 @review_inbox_bp.post("/<int:id_entrega>/aprobar")
 @permission_required("documentos.ver")
 def aprobar_entrega(id_entrega):
@@ -126,10 +131,27 @@ def aprobar_entrega(id_entrega):
 
     if not ultima_version:
         return jsonify({
-            "mensaje": "La entrega no tiene una versión para revisar."
+            "mensaje":
+                "La entrega no tiene una versión para revisar."
         }), 400
 
-    id_usuario = int(get_jwt_identity())
+    id_usuario = int(
+        get_jwt_identity()
+    )
+
+    destinatario = entrega.destinatario
+
+    solicitud = (
+        destinatario.solicitud
+        if destinatario
+        else None
+    )
+
+    codigo_solicitud = (
+        f"SOL-{solicitud.id_solicitud:04d}"
+        if solicitud
+        else f"ENT-{entrega.id_entrega:04d}"
+    )
 
     revision = RevisionEntrega(
         id_version_entrega=
@@ -143,18 +165,54 @@ def aprobar_entrega(id_entrega):
     )
 
     entrega.estado = "aprobado"
+
     entrega.fecha_actualizacion = datetime.now(
         timezone.utc
     )
 
-    db.session.add(revision)
-    db.session.commit()
+    try:
+        db.session.add(
+            revision
+        )
+
+        registrar_actividad(
+            id_usuario=id_usuario,
+            accion="APROBAR_ENTREGA",
+            modulo="Solicitudes y entregas",
+            registro=codigo_solicitud,
+            descripcion=(
+                f"Se aprobó la entrega "
+                f"#{entrega.id_entrega}, "
+                f"versión {ultima_version.numero_version}."
+            )
+        )
+
+        db.session.commit()
+
+    except Exception as error:
+        db.session.rollback()
+
+        print(
+            "ERROR APROBAR ENTREGA:",
+            repr(error)
+        )
+
+        return jsonify({
+            "mensaje":
+                "No fue posible aprobar la entrega."
+        }), 500
 
     return jsonify({
-        "mensaje": "Entrega aprobada correctamente.",
-        "estado": entrega.estado
+        "mensaje":
+            "Entrega aprobada correctamente.",
+        "estado":
+            entrega.estado
     }), 200
 
+
+# =========================================================
+# SOLICITAR CORRECCIÓN
+# =========================================================
 
 @review_inbox_bp.post(
     "/<int:id_entrega>/correccion"
@@ -168,13 +226,17 @@ def solicitar_correccion(id_entrega):
 
     if not entrega:
         return jsonify({
-            "mensaje": "Entrega no encontrada."
+            "mensaje":
+                "Entrega no encontrada."
         }), 404
 
     data = request.get_json() or {}
 
     observaciones = (
-        data.get("observaciones", "")
+        data.get(
+            "observaciones",
+            ""
+        )
         .strip()
     )
 
@@ -188,7 +250,9 @@ def solicitar_correccion(id_entrega):
 
     ultima_version = (
         VersionEntrega.query
-        .filter_by(id_entrega=id_entrega)
+        .filter_by(
+            id_entrega=id_entrega
+        )
         .order_by(
             VersionEntrega.numero_version.desc()
         )
@@ -197,10 +261,27 @@ def solicitar_correccion(id_entrega):
 
     if not ultima_version:
         return jsonify({
-            "mensaje": "La entrega no tiene una versión para revisar."
+            "mensaje":
+                "La entrega no tiene una versión para revisar."
         }), 400
 
-    id_usuario = int(get_jwt_identity())
+    id_usuario = int(
+        get_jwt_identity()
+    )
+
+    destinatario = entrega.destinatario
+
+    solicitud = (
+        destinatario.solicitud
+        if destinatario
+        else None
+    )
+
+    codigo_solicitud = (
+        f"SOL-{solicitud.id_solicitud:04d}"
+        if solicitud
+        else f"ENT-{entrega.id_entrega:04d}"
+    )
 
     revision = RevisionEntrega(
         id_version_entrega=
@@ -213,15 +294,51 @@ def solicitar_correccion(id_entrega):
         )
     )
 
-    entrega.estado = "correccion_solicitada"
-    entrega.fecha_actualizacion = datetime.now(
-        timezone.utc
+    entrega.estado = (
+        "correccion_solicitada"
     )
 
-    db.session.add(revision)
-    db.session.commit()
+    entrega.fecha_actualizacion = (
+        datetime.now(
+            timezone.utc
+        )
+    )
+
+    try:
+        db.session.add(
+            revision
+        )
+
+        registrar_actividad(
+            id_usuario=id_usuario,
+            accion="SOLICITAR_CORRECCION",
+            modulo="Solicitudes y entregas",
+            registro=codigo_solicitud,
+            descripcion=(
+                f"Se solicitó corrección para la entrega "
+                f"#{entrega.id_entrega}, "
+                f"versión {ultima_version.numero_version}."
+            )
+        )
+
+        db.session.commit()
+
+    except Exception as error:
+        db.session.rollback()
+
+        print(
+            "ERROR SOLICITAR CORRECCIÓN:",
+            repr(error)
+        )
+
+        return jsonify({
+            "mensaje":
+                "No fue posible solicitar la corrección."
+        }), 500
 
     return jsonify({
-        "mensaje": "Corrección solicitada correctamente.",
-        "estado": entrega.estado
+        "mensaje":
+            "Corrección solicitada correctamente.",
+        "estado":
+            entrega.estado
     }), 200

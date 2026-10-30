@@ -13,6 +13,7 @@ from app.models import (
     UsuarioPermiso,
 )
 from app.services.password_service import hash_password
+from app.services.bitacora_service import registrar_actividad
 from app.utils.permissions import permission_required
 
 
@@ -907,6 +908,18 @@ def crear_usuario():
                 )
                 or []
             )
+
+        registrar_actividad(
+            id_usuario=int(get_jwt_identity()),
+            accion="CREAR_USUARIO",
+            modulo="Usuarios",
+            descripcion=(
+                f"Se creó el usuario "
+                f"{usuario.nombres} {usuario.apellidos} "
+                f"(ID: {usuario.id_usuario})."
+            )
+        )
+
 
         db.session.commit()
 

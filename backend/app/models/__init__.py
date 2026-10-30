@@ -1,3 +1,4 @@
+
 from app.models.associations import rol_permisos
 from app.models.role import Role
 from app.models.permiso import Permiso
@@ -25,6 +26,7 @@ from .notificacion import Notificacion
 
 # NUEVO: Modelo del historial de respaldos
 from .respaldo import Respaldo
+from .bitacora import Bitacora
 
 
 __all__ = [
@@ -50,6 +52,7 @@ __all__ = [
     "CategoriaRepositorio",
     "DocumentoInstitucional",
     "VersionDocumentoInstitucional",
-    "Notificacion"
-    "Respaldo"
+    "Notificacion",
+    "Respaldo",
+    "Bitacora",
 ]

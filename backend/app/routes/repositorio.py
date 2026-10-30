@@ -20,6 +20,8 @@ from app.models import (
     Usuario,
     VersionDocumentoInstitucional,
 )
+
+from app.services.bitacora_service import registrar_actividad
 from app.utils.permissions import permission_required
 
 
@@ -1057,6 +1059,17 @@ def crear_documento():
             version
         )
 
+        registrar_actividad (
+            id_usuario=id_usuario,
+            accion="SUBIR_DOCUMENTO",
+            modulo="Repositorio institucional",
+            registro=documento.codigo,
+            descripcion=( 
+                f"Se registro el documento institucional"
+                f"«{documento.titulo}»."
+            )
+        )
+
         db.session.commit()
 
         return jsonify({
@@ -1416,6 +1429,17 @@ def reemplazar_archivo(
             version
         )
 
+        registrar_actividad ( 
+            id_usuario=id_usuario,
+            accion="REEMPLAZAR_DOCUMENTO",
+            modulo="Repositorio institucional",
+            registro=documento.codigo,
+            descripcion=( 
+                f"Se creó la versión {nueva_version} del documento "
+                f"«{documento.titulo}». Motivo: {motivo}"
+            ) 
+        )
+
         db.session.commit()
 
         return jsonify({
@@ -1509,6 +1533,17 @@ def enviar_a_papelera(
 
         documento.fecha_actualizacion = (
             datetime.utcnow()
+        )
+
+        registrar_actividad ( 
+            id_usuario=id_usuario,
+            accion="ENVIAR_A_PAPELERA",
+            modulo="Repositorio institucional",
+            registro=documento.codigo,
+            descripcion=(  
+                f"Se envió a la papelera el documento "
+                f"«{documento.titulo}»."
+            )
         )
 
         db.session.commit()
