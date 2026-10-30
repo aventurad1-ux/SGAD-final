@@ -161,7 +161,10 @@
       </main>
     </div>
 
-    <!-- MODAL DE REVISIÓN -->
+    <!-- =====================================================
+         MODAL DE REVISIÓN
+    ====================================================== -->
+
     <div
       v-if="mostrarModalRevision && entregaSeleccionada"
       class="modal-overlay"
@@ -238,10 +241,49 @@
           </div>
         </div>
 
+        <!-- =================================================
+             VER / DESCARGAR ARCHIVO
+        ================================================== -->
+
+        <div class="review-file-actions">
+          <button
+            type="button"
+            class="file-action-button"
+            :disabled="
+              procesandoArchivo ||
+              !entregaSeleccionada.id_version_entrega
+            "
+            @click="verArchivo"
+          >
+            {{
+              abriendoArchivo
+                ? "Abriendo..."
+                : "Ver archivo"
+            }}
+          </button>
+
+          <button
+            type="button"
+            class="file-action-button"
+            :disabled="
+              procesandoArchivo ||
+              !entregaSeleccionada.id_version_entrega
+            "
+            @click="descargarArchivo"
+          >
+            {{
+              descargandoArchivo
+                ? "Descargando..."
+                : "Descargar archivo"
+            }}
+          </button>
+        </div>
+
         <footer class="review-modal-footer">
           <button
             type="button"
             class="modal-secondary-button"
+            :disabled="procesando || procesandoArchivo"
             @click="cerrarRevision"
           >
             Cerrar
@@ -251,7 +293,7 @@
             v-if="puedeDictaminar"
             type="button"
             class="modal-warning-button"
-            :disabled="procesando"
+            :disabled="procesando || procesandoArchivo"
             @click="abrirCorreccion"
           >
             Solicitar corrección
@@ -261,16 +303,23 @@
             v-if="puedeDictaminar"
             type="button"
             class="modal-primary-button"
-            :disabled="procesando"
+            :disabled="procesando || procesandoArchivo"
             @click="confirmarAprobacion"
           >
-            {{ procesando ? "Procesando..." : "Aprobar" }}
+            {{
+              procesando
+                ? "Procesando..."
+                : "Aprobar"
+            }}
           </button>
         </footer>
       </section>
     </div>
 
-    <!-- MODAL PARA SOLICITAR CORRECCIÓN -->
+    <!-- =====================================================
+         MODAL PARA SOLICITAR CORRECCIÓN
+    ====================================================== -->
+
     <div
       v-if="mostrarModalCorreccion && entregaSeleccionada"
       class="modal-overlay"
@@ -363,6 +412,8 @@
 import DirectorSidebar from "../../components/layout/DirectorSidebar.vue";
 import DirectorTopbar from "../../components/layout/DirectorTopbar.vue";
 
+import api from "../../services/api";
+
 import {
   obtenerBandejaRevision,
   aprobarEntrega,
@@ -370,6 +421,7 @@ import {
 } from "../../services/reviewService";
 
 import "../../assets/css/review-inbox.css";
+
 
 export default {
   name: "ReviewInboxView",
@@ -390,6 +442,9 @@ export default {
       cargando: false,
       procesando: false,
 
+      abriendoArchivo: false,
+      descargandoArchivo: false,
+
       mensajeError: "",
       mensajeExito: "",
 
@@ -406,47 +461,59 @@ export default {
   computed: {
     docentesDisponibles() {
       const docentes = this.entregas
-        .map((entrega) => entrega.docente)
+        .map(
+          (entrega) =>
+            entrega.docente
+        )
         .filter(Boolean);
 
-      return [...new Set(docentes)].sort();
+      return [
+        ...new Set(docentes)
+      ].sort();
     },
 
     entregasFiltradas() {
       const texto =
-        this.busqueda.trim().toLowerCase();
+        this.busqueda
+          .trim()
+          .toLowerCase();
 
-      return this.entregas.filter((entrega) => {
-        const solicitud =
-          entrega.solicitud?.toLowerCase() || "";
+      return this.entregas.filter(
+        (entrega) => {
+          const solicitud =
+            entrega.solicitud
+              ?.toLowerCase() || "";
 
-        const docente =
-          entrega.docente?.toLowerCase() || "";
+          const docente =
+            entrega.docente
+              ?.toLowerCase() || "";
 
-        const codigo =
-          entrega.codigo?.toLowerCase() || "";
+          const codigo =
+            entrega.codigo
+              ?.toLowerCase() || "";
 
-        const coincideBusqueda =
-          solicitud.includes(texto) ||
-          docente.includes(texto) ||
-          codigo.includes(texto);
+          const coincideBusqueda =
+            solicitud.includes(texto) ||
+            docente.includes(texto) ||
+            codigo.includes(texto);
 
-        const coincideEstado =
-          !this.estadoSeleccionado ||
-          entrega.estado ===
-            this.estadoSeleccionado;
+          const coincideEstado =
+            !this.estadoSeleccionado ||
+            entrega.estado ===
+              this.estadoSeleccionado;
 
-        const coincideDocente =
-          !this.docenteSeleccionado ||
-          entrega.docente ===
-            this.docenteSeleccionado;
+          const coincideDocente =
+            !this.docenteSeleccionado ||
+            entrega.docente ===
+              this.docenteSeleccionado;
 
-        return (
-          coincideBusqueda &&
-          coincideEstado &&
-          coincideDocente
-        );
-      });
+          return (
+            coincideBusqueda &&
+            coincideEstado &&
+            coincideDocente
+          );
+        }
+      );
     },
 
     puedeDictaminar() {
@@ -460,6 +527,13 @@ export default {
       ].includes(
         this.entregaSeleccionada.estado
       );
+    },
+
+    procesandoArchivo() {
+      return (
+        this.abriendoArchivo ||
+        this.descargandoArchivo
+      );
     }
   },
 
@@ -468,6 +542,10 @@ export default {
   },
 
   methods: {
+    // =====================================================
+    // CARGAR BANDEJA
+    // =====================================================
+
     async cargarEntregas() {
       this.cargando = true;
       this.mensajeError = "";
@@ -477,33 +555,37 @@ export default {
           await obtenerBandejaRevision();
 
         this.entregas =
-          data.entregas.map((entrega) => ({
-            id: entrega.id_entrega,
+          data.entregas.map(
+            (entrega) => ({
+              id:
+                entrega.id_entrega,
 
-            id_version_entrega:
-              entrega.id_version_entrega,
+              id_version_entrega:
+                entrega.id_version_entrega,
 
-            solicitud:
-              entrega.solicitud,
+              solicitud:
+                entrega.solicitud,
 
-            codigo:
-              entrega.codigo,
+              codigo:
+                entrega.codigo,
 
-            docente:
-              entrega.docente,
+              docente:
+                entrega.docente,
 
-            fecha:
-              entrega.fecha,
+              fecha:
+                entrega.fecha,
 
-            estado:
-              entrega.estado,
+              estado:
+                entrega.estado,
 
-            archivo:
-              entrega.archivo,
+              archivo:
+                entrega.archivo,
 
-            version:
-              entrega.version
-          }));
+              version:
+                entrega.version
+            })
+          );
+
       } catch (error) {
         console.error(
           "Error al cargar bandeja:",
@@ -514,10 +596,15 @@ export default {
           error.response?.data?.mensaje ||
           error.response?.data?.message ||
           "No fue posible cargar la bandeja de revisión.";
+
       } finally {
         this.cargando = false;
       }
     },
+
+    // =====================================================
+    // ESTADOS
+    // =====================================================
 
     estadoClase(estado) {
       if (estado === "aprobado") {
@@ -525,7 +612,8 @@ export default {
       }
 
       if (
-        estado === "correccion_solicitada" ||
+        estado ===
+          "correccion_solicitada" ||
         estado === "rechazado"
       ) {
         return "status-correction";
@@ -536,17 +624,34 @@ export default {
 
     estadoTexto(estado) {
       const estados = {
-        pendiente: "Pendiente",
-        entregado: "Recibido",
-        en_revision: "En revisión",
+        pendiente:
+          "Pendiente",
+
+        entregado:
+          "Recibido",
+
+        en_revision:
+          "En revisión",
+
         correccion_solicitada:
           "Corrección solicitada",
-        aprobado: "Aprobado",
-        rechazado: "Rechazado"
+
+        aprobado:
+          "Aprobado",
+
+        rechazado:
+          "Rechazado"
       };
 
-      return estados[estado] || estado;
+      return (
+        estados[estado] ||
+        estado
+      );
     },
+
+    // =====================================================
+    // MODAL
+    // =====================================================
 
     abrirRevision(entrega) {
       this.entregaSeleccionada = {
@@ -560,13 +665,205 @@ export default {
     },
 
     cerrarRevision() {
-      if (this.procesando) {
+      if (
+        this.procesando ||
+        this.procesandoArchivo
+      ) {
         return;
       }
 
       this.mostrarModalRevision = false;
+
       this.entregaSeleccionada = null;
     },
+
+    // =====================================================
+    // VER ARCHIVO
+    // =====================================================
+
+    async verArchivo() {
+      if (
+        !this.entregaSeleccionada ||
+        !this.entregaSeleccionada
+          .id_version_entrega ||
+        this.procesandoArchivo
+      ) {
+        return;
+      }
+
+      this.abriendoArchivo = true;
+      this.mensajeError = "";
+
+      try {
+        const idVersion =
+          this.entregaSeleccionada
+            .id_version_entrega;
+
+        const response =
+          await api.get(
+            `/directora/revision/versiones/${idVersion}/ver`,
+            {
+              responseType: "blob"
+            }
+          );
+
+        const tipoContenido =
+          response.headers[
+            "content-type"
+          ] ||
+          "application/octet-stream";
+
+        const archivoBlob =
+          new Blob(
+            [response.data],
+            {
+              type:
+                tipoContenido
+            }
+          );
+
+        const url =
+          window.URL
+            .createObjectURL(
+              archivoBlob
+            );
+
+        const nuevaVentana =
+          window.open(
+            url,
+            "_blank"
+          );
+
+        if (!nuevaVentana) {
+          this.mensajeError =
+            "El navegador bloqueó la nueva pestaña. Permita ventanas emergentes para visualizar el archivo.";
+
+          window.URL
+            .revokeObjectURL(
+              url
+            );
+
+          return;
+        }
+
+        window.setTimeout(
+          () => {
+            window.URL
+              .revokeObjectURL(
+                url
+              );
+          },
+          60000
+        );
+
+      } catch (error) {
+        console.error(
+          "Error al visualizar archivo:",
+          error
+        );
+
+        this.mensajeError =
+          "No fue posible visualizar el archivo.";
+
+      } finally {
+        this.abriendoArchivo = false;
+      }
+    },
+
+    // =====================================================
+    // DESCARGAR ARCHIVO
+    // =====================================================
+
+    async descargarArchivo() {
+      if (
+        !this.entregaSeleccionada ||
+        !this.entregaSeleccionada
+          .id_version_entrega ||
+        this.procesandoArchivo
+      ) {
+        return;
+      }
+
+      this.descargandoArchivo = true;
+      this.mensajeError = "";
+
+      try {
+        const idVersion =
+          this.entregaSeleccionada
+            .id_version_entrega;
+
+        const response =
+          await api.get(
+            `/directora/revision/versiones/${idVersion}/descargar`,
+            {
+              responseType: "blob"
+            }
+          );
+
+        const tipoContenido =
+          response.headers[
+            "content-type"
+          ] ||
+          "application/octet-stream";
+
+        const archivoBlob =
+          new Blob(
+            [response.data],
+            {
+              type:
+                tipoContenido
+            }
+          );
+
+        const url =
+          window.URL
+            .createObjectURL(
+              archivoBlob
+            );
+
+        const enlace =
+          document.createElement(
+            "a"
+          );
+
+        enlace.href = url;
+
+        enlace.download =
+          this.entregaSeleccionada
+            .archivo ||
+          "documento";
+
+        document.body
+          .appendChild(
+            enlace
+          );
+
+        enlace.click();
+
+        enlace.remove();
+
+        window.URL
+          .revokeObjectURL(
+            url
+          );
+
+      } catch (error) {
+        console.error(
+          "Error al descargar archivo:",
+          error
+        );
+
+        this.mensajeError =
+          "No fue posible descargar el archivo.";
+
+      } finally {
+        this.descargandoArchivo = false;
+      }
+    },
+
+    // =====================================================
+    // CORRECCIÓN
+    // =====================================================
 
     abrirCorreccion() {
       this.observacionesCorreccion = "";
@@ -582,11 +879,17 @@ export default {
       }
 
       this.mostrarModalCorreccion = false;
+
       this.observacionesCorreccion = "";
+
       this.errorCorreccion = "";
 
       this.mostrarModalRevision = true;
     },
+
+    // =====================================================
+    // APROBAR
+    // =====================================================
 
     async confirmarAprobacion() {
       if (
@@ -596,15 +899,17 @@ export default {
         return;
       }
 
-      const confirmar = window.confirm(
-        "¿Desea aprobar esta entrega?"
-      );
+      const confirmar =
+        window.confirm(
+          "¿Desea aprobar esta entrega?"
+        );
 
       if (!confirmar) {
         return;
       }
 
       this.procesando = true;
+
       this.mensajeError = "";
       this.mensajeExito = "";
 
@@ -619,9 +924,11 @@ export default {
           "Entrega aprobada correctamente.";
 
         this.mostrarModalRevision = false;
+
         this.entregaSeleccionada = null;
 
         await this.cargarEntregas();
+
       } catch (error) {
         console.error(
           "Error al aprobar entrega:",
@@ -629,21 +936,31 @@ export default {
         );
 
         this.mensajeError =
-          error.response?.data?.mensaje ||
-          error.response?.data?.message ||
+          error.response?.data
+            ?.mensaje ||
+          error.response?.data
+            ?.message ||
           "No fue posible aprobar la entrega.";
+
       } finally {
         this.procesando = false;
       }
     },
 
+    // =====================================================
+    // ENVIAR CORRECCIÓN
+    // =====================================================
+
     async enviarCorreccion() {
       this.errorCorreccion = "";
 
       const observaciones =
-        this.observacionesCorreccion.trim();
+        this.observacionesCorreccion
+          .trim();
 
-      if (observaciones.length < 8) {
+      if (
+        observaciones.length < 8
+      ) {
         this.errorCorreccion =
           "Las observaciones deben tener al menos 8 caracteres.";
 
@@ -658,6 +975,7 @@ export default {
       }
 
       this.procesando = true;
+
       this.mensajeError = "";
       this.mensajeExito = "";
 
@@ -672,12 +990,17 @@ export default {
           respuesta.mensaje ||
           "Corrección solicitada correctamente.";
 
-        this.mostrarModalCorreccion = false;
+        this.mostrarModalCorreccion =
+          false;
 
-        this.observacionesCorreccion = "";
-        this.entregaSeleccionada = null;
+        this.observacionesCorreccion =
+          "";
+
+        this.entregaSeleccionada =
+          null;
 
         await this.cargarEntregas();
+
       } catch (error) {
         console.error(
           "Error al solicitar corrección:",
@@ -685,9 +1008,12 @@ export default {
         );
 
         this.errorCorreccion =
-          error.response?.data?.mensaje ||
-          error.response?.data?.message ||
+          error.response?.data
+            ?.mensaje ||
+          error.response?.data
+            ?.message ||
           "No fue posible solicitar la corrección.";
+
       } finally {
         this.procesando = false;
       }
@@ -695,3 +1021,55 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.review-file-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 26px 22px;
+  flex-wrap: wrap;
+}
+
+.file-action-button {
+  min-height: 42px;
+  padding: 0 18px;
+
+  border: 1px solid #0f5f87;
+  border-radius: 9px;
+
+  background: #ffffff;
+  color: #0f5f87;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.file-action-button:hover:not(:disabled) {
+  background: #0f5f87;
+  color: #ffffff;
+}
+
+.file-action-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+@media (max-width: 700px) {
+  .review-file-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .file-action-button {
+    width: 100%;
+  }
+}
+</style>

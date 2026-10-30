@@ -1,6 +1,13 @@
 from datetime import datetime, timezone
+from pathlib import Path
 
-from flask import Blueprint, jsonify, request
+from flask import (
+    Blueprint,
+    current_app,
+    jsonify,
+    request,
+    send_file,
+)
 from flask_jwt_extended import get_jwt_identity
 
 from app.extensions import db
@@ -19,6 +26,41 @@ review_inbox_bp = Blueprint(
     url_prefix="/api/directora/revision"
 )
 
+
+# =========================================================
+# UTILIDADES
+# =========================================================
+
+def backend_root():
+    """
+    current_app.root_path apunta a backend/app.
+    Subimos un nivel para llegar a backend.
+    """
+    return Path(
+        current_app.root_path
+    ).parent
+
+
+def obtener_ruta_version(version):
+    if not version or not version.ruta_archivo:
+        return None
+
+    ruta = Path(
+        version.ruta_archivo
+    )
+
+    if ruta.is_absolute():
+        return ruta
+
+    return (
+        backend_root()
+        / ruta
+    )
+
+
+# =========================================================
+# LISTAR ENTREGAS PARA REVISIÓN
+# =========================================================
 
 @review_inbox_bp.get("")
 @permission_required("documentos.ver")
@@ -59,38 +101,50 @@ def listar_entregas_revision():
         )
 
         resultado.append({
-            "id_entrega": entrega.id_entrega,
+            "id_entrega":
+                entrega.id_entrega,
+
             "solicitud": (
                 solicitud.titulo
                 if solicitud
                 else ""
             ),
+
             "codigo": (
                 f"SOL-{solicitud.id_solicitud:04d}"
                 if solicitud
                 else ""
             ),
+
             "docente": (
                 f"{docente.nombres} {docente.apellidos}".strip()
                 if docente
                 else ""
             ),
+
             "fecha": (
-                entrega.fecha_primera_entrega.strftime("%d/%m/%Y")
+                entrega.fecha_primera_entrega.strftime(
+                    "%d/%m/%Y"
+                )
                 if entrega.fecha_primera_entrega
                 else None
             ),
-            "estado": entrega.estado,
+
+            "estado":
+                entrega.estado,
+
             "archivo": (
                 ultima_version.nombre_archivo
                 if ultima_version
                 else None
             ),
+
             "version": (
                 ultima_version.numero_version
                 if ultima_version
                 else None
             ),
+
             "id_version_entrega": (
                 ultima_version.id_version_entrega
                 if ultima_version
@@ -104,12 +158,130 @@ def listar_entregas_revision():
 
 
 # =========================================================
+# VER ARCHIVO DE UNA ENTREGA
+# =========================================================
+
+@review_inbox_bp.get(
+    "/versiones/<int:id_version>/ver"
+)
+@permission_required("documentos.ver")
+def ver_archivo_revision(
+    id_version
+):
+    version = db.session.get(
+        VersionEntrega,
+        id_version
+    )
+
+    if not version:
+        return jsonify({
+            "mensaje":
+                "La versión del archivo no existe."
+        }), 404
+
+    entrega = version.entrega
+
+    if not entrega:
+        return jsonify({
+            "mensaje":
+                "La entrega asociada no existe."
+        }), 404
+
+    ruta = obtener_ruta_version(
+        version
+    )
+
+    if (
+        not ruta
+        or not ruta.exists()
+        or not ruta.is_file()
+    ):
+        return jsonify({
+            "mensaje":
+                "El archivo físico no fue encontrado."
+        }), 404
+
+    return send_file(
+        ruta,
+        mimetype=(
+            version.tipo_mime
+            or "application/octet-stream"
+        ),
+        as_attachment=False,
+        download_name=(
+            version.nombre_archivo
+        )
+    )
+
+
+# =========================================================
+# DESCARGAR ARCHIVO DE UNA ENTREGA
+# =========================================================
+
+@review_inbox_bp.get(
+    "/versiones/<int:id_version>/descargar"
+)
+@permission_required("documentos.ver")
+def descargar_archivo_revision(
+    id_version
+):
+    version = db.session.get(
+        VersionEntrega,
+        id_version
+    )
+
+    if not version:
+        return jsonify({
+            "mensaje":
+                "La versión del archivo no existe."
+        }), 404
+
+    entrega = version.entrega
+
+    if not entrega:
+        return jsonify({
+            "mensaje":
+                "La entrega asociada no existe."
+        }), 404
+
+    ruta = obtener_ruta_version(
+        version
+    )
+
+    if (
+        not ruta
+        or not ruta.exists()
+        or not ruta.is_file()
+    ):
+        return jsonify({
+            "mensaje":
+                "El archivo físico no fue encontrado."
+        }), 404
+
+    return send_file(
+        ruta,
+        mimetype=(
+            version.tipo_mime
+            or "application/octet-stream"
+        ),
+        as_attachment=True,
+        download_name=(
+            version.nombre_archivo
+        )
+    )
+
+
+# =========================================================
 # APROBAR ENTREGA
 # =========================================================
 
-@review_inbox_bp.post("/<int:id_entrega>/aprobar")
+@review_inbox_bp.post(
+    "/<int:id_entrega>/aprobar"
+)
 @permission_required("documentos.ver")
-def aprobar_entrega(id_entrega):
+def aprobar_entrega(
+    id_entrega
+):
     entrega = db.session.get(
         Entrega,
         id_entrega
@@ -117,12 +289,15 @@ def aprobar_entrega(id_entrega):
 
     if not entrega:
         return jsonify({
-            "mensaje": "Entrega no encontrada."
+            "mensaje":
+                "Entrega no encontrada."
         }), 404
 
     ultima_version = (
         VersionEntrega.query
-        .filter_by(id_entrega=id_entrega)
+        .filter_by(
+            id_entrega=id_entrega
+        )
         .order_by(
             VersionEntrega.numero_version.desc()
         )
@@ -139,7 +314,9 @@ def aprobar_entrega(id_entrega):
         get_jwt_identity()
     )
 
-    destinatario = entrega.destinatario
+    destinatario = (
+        entrega.destinatario
+    )
 
     solicitud = (
         destinatario.solicitud
@@ -154,20 +331,33 @@ def aprobar_entrega(id_entrega):
     )
 
     revision = RevisionEntrega(
-        id_version_entrega=
-            ultima_version.id_version_entrega,
-        id_usuario_revisor=id_usuario,
-        resultado="aprobado",
-        observaciones=None,
-        fecha_revision=datetime.now(
-            timezone.utc
+        id_version_entrega=(
+            ultima_version.id_version_entrega
+        ),
+        id_usuario_revisor=(
+            id_usuario
+        ),
+        resultado=(
+            "aprobado"
+        ),
+        observaciones=(
+            None
+        ),
+        fecha_revision=(
+            datetime.now(
+                timezone.utc
+            )
         )
     )
 
-    entrega.estado = "aprobado"
+    entrega.estado = (
+        "aprobado"
+    )
 
-    entrega.fecha_actualizacion = datetime.now(
-        timezone.utc
+    entrega.fecha_actualizacion = (
+        datetime.now(
+            timezone.utc
+        )
     )
 
     try:
@@ -183,7 +373,8 @@ def aprobar_entrega(id_entrega):
             descripcion=(
                 f"Se aprobó la entrega "
                 f"#{entrega.id_entrega}, "
-                f"versión {ultima_version.numero_version}."
+                f"versión "
+                f"{ultima_version.numero_version}."
             )
         )
 
@@ -205,6 +396,7 @@ def aprobar_entrega(id_entrega):
     return jsonify({
         "mensaje":
             "Entrega aprobada correctamente.",
+
         "estado":
             entrega.estado
     }), 200
@@ -218,7 +410,9 @@ def aprobar_entrega(id_entrega):
     "/<int:id_entrega>/correccion"
 )
 @permission_required("documentos.ver")
-def solicitar_correccion(id_entrega):
+def solicitar_correccion(
+    id_entrega
+):
     entrega = db.session.get(
         Entrega,
         id_entrega
@@ -230,7 +424,10 @@ def solicitar_correccion(id_entrega):
                 "Entrega no encontrada."
         }), 404
 
-    data = request.get_json() or {}
+    data = (
+        request.get_json()
+        or {}
+    )
 
     observaciones = (
         data.get(
@@ -269,7 +466,9 @@ def solicitar_correccion(id_entrega):
         get_jwt_identity()
     )
 
-    destinatario = entrega.destinatario
+    destinatario = (
+        entrega.destinatario
+    )
 
     solicitud = (
         destinatario.solicitud
@@ -284,13 +483,22 @@ def solicitar_correccion(id_entrega):
     )
 
     revision = RevisionEntrega(
-        id_version_entrega=
-            ultima_version.id_version_entrega,
-        id_usuario_revisor=id_usuario,
-        resultado="correccion_solicitada",
-        observaciones=observaciones,
-        fecha_revision=datetime.now(
-            timezone.utc
+        id_version_entrega=(
+            ultima_version.id_version_entrega
+        ),
+        id_usuario_revisor=(
+            id_usuario
+        ),
+        resultado=(
+            "correccion_solicitada"
+        ),
+        observaciones=(
+            observaciones
+        ),
+        fecha_revision=(
+            datetime.now(
+                timezone.utc
+            )
         )
     )
 
@@ -315,9 +523,11 @@ def solicitar_correccion(id_entrega):
             modulo="Solicitudes y entregas",
             registro=codigo_solicitud,
             descripcion=(
-                f"Se solicitó corrección para la entrega "
+                f"Se solicitó corrección "
+                f"para la entrega "
                 f"#{entrega.id_entrega}, "
-                f"versión {ultima_version.numero_version}."
+                f"versión "
+                f"{ultima_version.numero_version}."
             )
         )
 
@@ -339,6 +549,7 @@ def solicitar_correccion(id_entrega):
     return jsonify({
         "mensaje":
             "Corrección solicitada correctamente.",
+
         "estado":
             entrega.estado
     }), 200
