@@ -1,3 +1,4 @@
+
 from datetime import datetime, timezone
 
 from flask import Blueprint, jsonify, request
@@ -14,6 +15,7 @@ from app.extensions import db
 from app.models.usuario import Usuario
 from app.models.refresh_token import RefreshToken
 from app.services.password_service import verify_password
+from app.services.bitacora_service import registrar_actividad
 
 
 auth_bp = Blueprint(
@@ -85,6 +87,14 @@ def login():
     )
 
     db.session.add(token_db)
+
+    registrar_actividad(
+        id_usuario=usuario.id_usuario,
+        accion="INICIAR_SESION",
+        modulo="Autenticacion",
+        descripcion="El usuario inicio sesion correctamente."
+    )
+
     db.session.commit()
 
     return jsonify({
@@ -181,6 +191,3 @@ def me():
             "rol": usuario.rol.nombre
         }
     }), 200
-
-
-

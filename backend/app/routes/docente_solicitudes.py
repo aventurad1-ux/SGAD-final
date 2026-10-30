@@ -24,6 +24,7 @@ from app.models import (
     Usuario,
     VersionEntrega,
 )
+from app.services.bitacora_service import registrar_actividad
 from app.utils.permissions import permission_required
 
 
@@ -1171,6 +1172,41 @@ def realizar_entrega(
             destinatario.fecha_lectura = (
                 ahora
             )
+
+        # -----------------------------------------
+        # REGISTRAR ACTIVIDAD EN BITÁCORA
+        # -----------------------------------------
+
+        accion_bitacora = (
+            "REALIZAR_ENTREGA"
+            if numero_version == 1
+            else "ENVIAR_CORRECCION"
+        )
+
+        descripcion_bitacora = (
+            (
+                f"Se realizó la entrega del requisito "
+                f"«{requisito.nombre_documento}» "
+                f"para la solicitud «{solicitud.titulo}»."
+            )
+            if numero_version == 1
+            else (
+                f"Se envió la versión {numero_version} "
+                f"del requisito "
+                f"«{requisito.nombre_documento}» "
+                f"para la solicitud «{solicitud.titulo}»."
+            )
+        )
+
+        registrar_actividad(
+            id_usuario=id_usuario,
+            accion=accion_bitacora,
+            modulo="Solicitudes y entregas",
+            registro=(
+                f"SOL-{solicitud.id_solicitud:04d}"
+            ),
+            descripcion=descripcion_bitacora
+        )
 
         db.session.commit()
 

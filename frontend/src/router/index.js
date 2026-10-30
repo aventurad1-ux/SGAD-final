@@ -1,3 +1,4 @@
+
 import {
   createRouter,
   createWebHistory
@@ -41,8 +42,6 @@ import BackupView
   
 /*
  * PERFIL DOCENTE
- *
- * Este archivo lo crearemos en el siguiente paso.
  */
 import TeacherDashboardView
   from "../views/docente/TeacherDashboardView.vue";
@@ -50,16 +49,16 @@ import TeacherDashboardView
 import TeacherStudentsView
   from "../views/docente/TeacherStudentsView.vue";
 
-import TeacherRequestsView 
+import TeacherRequestsView
   from "../views/docente/TeacherRequestsView.vue";
 
-import TeacherDocumentsView 
+import TeacherDocumentsView
   from "../views/docente/TeacherDocumentsView.vue";
 
-import TeacherCorrectionsView 
+import TeacherCorrectionsView
   from "../views/docente/TeacherCorrectionsView.vue";
 
-import TeacherReceiptsView 
+import TeacherReceiptsView
   from "../views/docente/TeacherReceiptsView.vue";
 
 import TeacherProfileView
@@ -191,6 +190,21 @@ const routes = [
  },
 
   // =====================================================
+  // BITÁCORA - DIRECTORA
+  // =====================================================
+
+  {
+    path: "/directora/bitacora",
+    name: "directora-bitacora",
+    component: () =>
+      import("../views/directora/BitacoraView.vue"),
+    meta: {
+      requiresAuth: true,
+      role: "Directora"
+    }
+  },
+
+  // =====================================================
   // DOCENTE
   // =====================================================
 
@@ -203,6 +217,7 @@ const routes = [
       role: "Docente"
     }
   },
+
   {
     path: "/docente/estudiantes",
     name: "docente-estudiantes",
@@ -212,6 +227,7 @@ const routes = [
       role: "Docente"
     }
   },
+
   {
     path: "/docente/solicitudes",
     name: "docente-solicitudes",
@@ -221,6 +237,7 @@ const routes = [
       role: "Docente"
     }
   },
+
   {
     path: "/docente/documentos",
     name: "docente-documentos",
@@ -230,6 +247,7 @@ const routes = [
       role: "Docente"
     }
   },
+
   {
     path: "/docente/correcciones",
     name: "docente-correcciones",
@@ -239,6 +257,7 @@ const routes = [
       role: "Docente"
     }
   },
+
   {
     path: "/docente/comprobantes",
     name: "docente-comprobantes",
@@ -248,6 +267,7 @@ const routes = [
       role: "Docente"
     }
   },
+
   {
     path: "/docente/perfil",
     name: "docente-perfil",

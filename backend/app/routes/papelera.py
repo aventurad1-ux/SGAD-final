@@ -7,6 +7,7 @@ from flask import (
     request,
     send_file,
 )
+from flask_jwt_extended import get_jwt_identity
 
 from app.extensions import db
 from app.models import (
@@ -14,6 +15,7 @@ from app.models import (
     DocumentoInstitucional,
     VersionDocumentoInstitucional,
 )
+from app.services.bitacora_service import registrar_actividad
 from app.utils.permissions import permission_required
 
 
@@ -488,6 +490,21 @@ def restaurar_documento(
             datetime.utcnow()
         )
 
+        id_usuario = int(
+            get_jwt_identity()
+        )
+
+        registrar_actividad(
+            id_usuario=id_usuario,
+            accion="RESTAURAR_DOCUMENTO",
+            modulo="Papelera",
+            registro=documento.codigo,
+            descripcion=(
+                f"Se restauró el documento "
+                f"«{documento.titulo}»."
+            )
+        )
+
         db.session.commit()
 
         return jsonify({
@@ -707,6 +724,13 @@ def eliminar_definitivamente(
             )
 
     try:
+        id_usuario = int(
+            get_jwt_identity()
+        )
+
+        codigo_documento = documento.codigo
+        titulo_documento = documento.titulo
+
         for version in versiones:
             db.session.delete(
                 version
@@ -714,6 +738,17 @@ def eliminar_definitivamente(
 
         db.session.delete(
             documento
+        )
+
+        registrar_actividad(
+            id_usuario=id_usuario,
+            accion="ELIMINAR_DOCUMENTO",
+            modulo="Papelera",
+            registro=codigo_documento,
+            descripcion=(
+                f"Se eliminó definitivamente el documento "
+                f"«{titulo_documento}»."
+            )
         )
 
         db.session.commit()
