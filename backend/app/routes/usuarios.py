@@ -13,6 +13,10 @@ from app.models import (
     UsuarioPermiso,
 )
 from app.services.password_service import hash_password
+from app.services.hibp_service import (
+    HIBPServiceError,
+    verificar_password_comprometida,
+)
 from app.services.bitacora_service import registrar_actividad
 from app.utils.permissions import permission_required
 
@@ -809,6 +813,37 @@ def crear_usuario():
                 )
         }), 400
 
+    try:
+        resultado_hibp = (
+            verificar_password_comprometida(
+                password
+            )
+        )
+
+    except HIBPServiceError:
+        return jsonify({
+            "mensaje":
+                (
+                    "No fue posible verificar "
+                    "la seguridad de la contraseña. "
+                    "Intente nuevamente."
+                )
+        }), 503
+
+    if resultado_hibp["comprometida"]:
+        return jsonify({
+            "mensaje":
+                (
+                    "La contraseña seleccionada aparece "
+                    "en filtraciones de datos conocidas. "
+                    "Utilice una contraseña diferente."
+                ),
+            "codigo":
+                "PASSWORD_COMPROMETIDA",
+            "apariciones":
+                resultado_hibp["apariciones"],
+        }), 400
+
     correo_existente = (
         Usuario.query
         .filter(
@@ -1156,6 +1191,37 @@ def actualizar_usuario(
                             "La nueva contraseña debe "
                             "tener al menos 10 caracteres."
                         )
+                }), 400
+
+            try:
+                resultado_hibp = (
+                    verificar_password_comprometida(
+                        password
+                    )
+                )
+
+            except HIBPServiceError:
+                return jsonify({
+                    "mensaje":
+                        (
+                            "No fue posible verificar "
+                            "la seguridad de la contraseña. "
+                            "Intente nuevamente."
+                        )
+                }), 503
+
+            if resultado_hibp["comprometida"]:
+                return jsonify({
+                    "mensaje":
+                        (
+                            "La contraseña seleccionada aparece "
+                            "en filtraciones de datos conocidas. "
+                            "Utilice una contraseña diferente."
+                        ),
+                    "codigo":
+                        "PASSWORD_COMPROMETIDA",
+                    "apariciones":
+                        resultado_hibp["apariciones"],
                 }), 400
 
             usuario.contrasena_hash = (
