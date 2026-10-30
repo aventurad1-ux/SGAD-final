@@ -40,6 +40,8 @@ import ReportsView
 import BackupView
   from "../views/directora/BackupView.vue";
   
+import SegundoFactorView
+  from "../views/auth/SegundoFactorView.vue";
 /*
  * PERFIL DOCENTE
  */
@@ -75,6 +77,12 @@ const routes = [
     name: "login",
     component: LoginView
   },
+
+  {
+  path: "/verificacion-2fa",
+  name: "verificacion-2fa",
+  component: SegundoFactorView
+},
 
   // =====================================================
   // DIRECTORA

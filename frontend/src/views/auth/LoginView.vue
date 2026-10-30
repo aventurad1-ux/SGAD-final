@@ -114,23 +114,6 @@
             Accesos de demostración
           </p>
 
-          <div class="demo-buttons">
-            <button
-              type="button"
-              :disabled="cargando"
-              @click="usarDirectora"
-            >
-              Usar cuenta de directora
-            </button>
-
-            <button
-              type="button"
-              :disabled="cargando"
-              @click="usarDocente"
-            >
-              Usar cuenta de docente
-            </button>
-          </div>
         </div>
       </div>
     </section>
@@ -156,27 +139,6 @@ export default {
   },
 
   methods: {
-    usarDirectora() {
-      this.correo =
-        "directora@sgad.demo";
-
-      this.password =
-        "Directora2026";
-
-      this.mensajeError =
-        "";
-    },
-
-    usarDocente() {
-      this.correo =
-        "docente@sgad.demo";
-
-      this.password =
-        "Docente2026";
-
-      this.mensajeError =
-        "";
-    },
 
     async iniciarSesion() {
       this.mensajeError =
@@ -201,6 +163,30 @@ export default {
             this.correo,
             this.password
           );
+if (data.requires_2fa) {
+  localStorage.removeItem("access_token");
+  localStorage.removeItem("refresh_token");
+  localStorage.removeItem("usuario");
+
+  sessionStorage.setItem(
+    "sgad_desafio_2fa",
+    data.desafio
+  );
+
+  sessionStorage.setItem(
+    "sgad_2fa_setup",
+    String(data.requires_setup)
+  );
+
+  this.password = "";
+
+  await this.$router.replace(
+    "/verificacion-2fa"
+  );
+
+  return;
+}
+
 
         localStorage.setItem(
           "access_token",
