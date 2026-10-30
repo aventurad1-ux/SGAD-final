@@ -12,9 +12,9 @@
 
         <section class="dashboard-hero">
           <div class="hero-text">
-            <p class="hero-eyebrow">
-              PANEL DIRECTIVO · CICLO 2026
-            </p>
+     <p class="hero-eyebrow">
+  PANEL DIRECTIVO · CICLO {{ anioCicloSeleccionado }}
+</p>
 
             <h1>
               Bienvenida, Prof. María Eugenia
@@ -482,7 +482,7 @@ import "../../assets/css/director.css";
 
 
 const router = useRouter();
-
+const anioCicloSeleccionado = ref("—");
 
 const cargando =
   ref(true);
@@ -647,6 +647,14 @@ async function cargarDashboard() {
         idCiclo
       )
     ]);
+
+        const cicloActual =
+      dataCiclos?.ciclo || dataCiclos?.ciclo_escolar;
+
+    anioCicloSeleccionado.value =
+      cicloActual?.anio ||
+      cicloActual?.anio_escolar ||
+      "—";
 
 
     /* =====================================================
@@ -881,3 +889,74 @@ onBeforeUnmount(
   }
 );
 </script>
+
+
+<style scoped>
+/* COLORES DEL DASHBOARD - PROTOTIPO SGAD */
+
+/* 1. Estudiantes - Verde */
+.dashboard-metrics .metric-card:nth-child(1) {
+  background: #bfe6b9;
+  border-color: #bfe6b9;
+}
+
+.dashboard-metrics .metric-card:nth-child(1) .metric-footer {
+  background: #e7f5e4;
+}
+
+/* 2. Docentes - Azul */
+.dashboard-metrics .metric-card:nth-child(2) {
+  background: #c8eafa;
+  border-color: #c8eafa;
+}
+
+.dashboard-metrics .metric-card:nth-child(2) .metric-footer {
+  background: #eaf7fd;
+}
+
+/* 3. Pendientes - Amarillo */
+.dashboard-metrics .metric-card:nth-child(3) {
+  background: #ffe4a6;
+  border-color: #ffe4a6;
+}
+
+.dashboard-metrics .metric-card:nth-child(3) .metric-footer {
+  background: #fff4d7;
+}
+
+/* 4. Solicitudes - Rosado */
+.dashboard-metrics .metric-card:nth-child(4) {
+  background: #f8c9c7;
+  border-color: #f8c9c7;
+}
+
+.dashboard-metrics .metric-card:nth-child(4) .metric-footer {
+  background: #fce9e8;
+}
+
+
+.dashboard-metrics .metric-card {
+  overflow: hidden;
+  padding: 18px 20px 0;
+  border-radius: 22px;
+}
+
+.dashboard-metrics .metric-card .metric-footer {
+  margin: 12px -20px 8px;
+  padding: 10px 20px;
+  border-radius: 0 0 18px 18px;
+  background: rgba(255, 255, 255, 0.20);
+  border-top: none;
+  box-shadow: none;
+}
+
+/* Tarjetas compactas como en el prototipo */
+.dashboard-metrics .metric-card {
+  min-height: 0;
+  padding: 16px 18px 0;
+}
+
+.dashboard-metrics .metric-card .metric-description {
+  margin-bottom: 12px;
+}
+</style>

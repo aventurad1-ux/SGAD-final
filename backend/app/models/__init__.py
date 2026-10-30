@@ -56,3 +56,11 @@ __all__ = [
     "Respaldo",
     "Bitacora",
 ]
+
+from app.models.usuario_2fa import Usuario2FA
+
+from app.models.usuario_2fa import Usuario2FA
+
+from app.models.codigo_recuperacion_2fa import CodigoRecuperacion2FA
+
+from app.models.desafio_2fa_consumido import Desafio2FAConsumido

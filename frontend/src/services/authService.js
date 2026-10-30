@@ -41,3 +41,37 @@ export async function logout(refreshToken) {
 
   return response.data;
 }
+
+
+export async function preparar2FA(desafio) {
+  const respuesta = await api.post("/auth/2fa/setup", {
+    desafio
+  });
+  return respuesta.data;
+}
+
+export async function activar2FA(desafio, codigo) {
+  const respuesta = await api.post("/auth/2fa/activate", {
+    desafio,
+    codigo
+  });
+  return respuesta.data;
+}
+
+export async function verificar2FA(desafio, codigo) {
+  const respuesta = await api.post("/auth/2fa/verify", {
+    desafio,
+    codigo
+  });
+  return respuesta.data;
+}
+
+
+export async function recuperarAcceso2FA(desafio, codigo) {
+  const respuesta = await api.post("/auth/2fa/recovery", {
+    desafio,
+    codigo
+  });
+
+  return respuesta.data;
+}

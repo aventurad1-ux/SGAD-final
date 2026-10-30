@@ -1,4 +1,3 @@
-
 <template>
   <div class="director-layout">
     <DirectorSidebar />
@@ -124,9 +123,17 @@
                     y asignaciones los administra Dirección.
                   </p>
                   <p class="perfil-texto-suave">
-                    El cambio de contraseña se habilitará
-                    cuando definamos el sistema de autenticación.
+                    Google Authenticator protege el acceso a tu cuenta.
+                    Si pierdes los códigos de recuperación, puedes generar
+                    ocho nuevos verificando tu identidad.
                   </p>
+                  <button
+                    type="button"
+                    class="perfil-boton-claro"
+                    @click="abrirSeguridad"
+                  >
+                    Regenerar códigos de recuperación
+                  </button>
                 </article>
               </div>
 
@@ -251,6 +258,103 @@
       </section>
     </div>
 
+    <!-- REGENERACIÓN DE CÓDIGOS DE RECUPERACIÓN 2FA -->
+    <div
+      v-if="mostrarSeguridad"
+      class="perfil-modal-fondo"
+      @click.self="cerrarSeguridad"
+    >
+      <section
+        class="perfil-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="titulo-seguridad"
+      >
+        <header class="perfil-modal-cabecera">
+          <div>
+            <span>SEGURIDAD DE LA CUENTA</span>
+            <h2 id="titulo-seguridad">Códigos de recuperación</h2>
+          </div>
+          <button
+            type="button"
+            class="perfil-cerrar"
+            aria-label="Cerrar"
+            :disabled="regenerandoCodigos"
+            @click="cerrarSeguridad"
+          >×</button>
+        </header>
+
+        <form
+          v-if="codigosNuevos.length === 0"
+          @submit.prevent="regenerarCodigos"
+        >
+          <div class="perfil-formulario">
+            <p>
+              Se crearán 8 códigos nuevos y todos los anteriores
+              dejarán de funcionar. Guarda los nuevos en un lugar seguro.
+            </p>
+            <label>
+              Código actual de Google Authenticator
+              <input
+                v-model.trim="codigoAuthenticator"
+                type="text"
+                inputmode="numeric"
+                autocomplete="one-time-code"
+                maxlength="6"
+                pattern="[0-9]{6}"
+                placeholder="6 dígitos"
+                required
+              />
+            </label>
+            <p v-if="errorSeguridad" class="perfil-error" role="alert">
+              {{ errorSeguridad }}
+            </p>
+          </div>
+          <footer class="perfil-modal-pie">
+            <button
+              type="button"
+              class="perfil-boton-claro"
+              :disabled="regenerandoCodigos"
+              @click="cerrarSeguridad"
+            >Cancelar</button>
+            <button
+              type="submit"
+              class="perfil-boton-azul"
+              :disabled="regenerandoCodigos || !/^[0-9]{6}$/.test(codigoAuthenticator)"
+            >
+              {{ regenerandoCodigos ? "Verificando..." : "Generar 8 códigos nuevos" }}
+            </button>
+          </footer>
+        </form>
+
+        <div v-else>
+          <div class="perfil-formulario">
+            <p><strong>Códigos generados correctamente.</strong></p>
+            <p>
+              Se muestran una sola vez. Los códigos anteriores ya no sirven.
+              No los compartas ni tomes capturas de pantalla.
+            </p>
+            <div class="perfil-codigos-grid" aria-label="Nuevos códigos de recuperación">
+              <code v-for="(item, indice) in codigosNuevos" :key="indice">
+                {{ item }}
+              </code>
+            </div>
+            <p v-if="errorSeguridad" class="perfil-error" role="alert">
+              {{ errorSeguridad }}
+            </p>
+          </div>
+          <footer class="perfil-modal-pie">
+            <button type="button" class="perfil-boton-claro" @click="copiarCodigos">
+              Copiar códigos
+            </button>
+            <button type="button" class="perfil-boton-azul" @click="cerrarSeguridad">
+              Ya los guardé, cerrar
+            </button>
+          </footer>
+        </div>
+      </section>
+    </div>
+
     <!-- MENSAJE DE CONFIRMACIÓN -->
     <div
       v-if="notificacion"
@@ -274,6 +378,7 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
+import api from "../../services/api";
 
 import DirectorSidebar from "../../components/layout/DirectorSidebar.vue";
 import DirectorTopbar from "../../components/layout/DirectorTopbar.vue";
@@ -299,6 +404,11 @@ const guardando = ref(false);
 const guardandoFoto = ref(false);
 
 const mostrarEditor = ref(false);
+const mostrarSeguridad = ref(false);
+const codigoAuthenticator = ref("");
+const codigosNuevos = ref([]);
+const errorSeguridad = ref("");
+const regenerandoCodigos = ref(false);
 const errorCarga = ref("");
 const errorFormulario = ref("");
 
@@ -561,6 +671,56 @@ async function eliminarFoto() {
     );
   } finally {
     guardandoFoto.value = false;
+  }
+}
+
+function abrirSeguridad() {
+  codigoAuthenticator.value = "";
+  codigosNuevos.value = [];
+  errorSeguridad.value = "";
+  mostrarSeguridad.value = true;
+}
+
+function cerrarSeguridad() {
+  if (regenerandoCodigos.value) return;
+  mostrarSeguridad.value = false;
+  codigoAuthenticator.value = "";
+  codigosNuevos.value = [];
+  errorSeguridad.value = "";
+}
+
+async function regenerarCodigos() {
+  if (regenerandoCodigos.value || !/^[0-9]{6}$/.test(codigoAuthenticator.value)) return;
+  errorSeguridad.value = "";
+  regenerandoCodigos.value = true;
+
+  try {
+    const respuesta = await api.post(
+      "/auth/2fa/recovery-codes/regenerate",
+      { codigo: codigoAuthenticator.value }
+    );
+    const codigos = respuesta.data?.codigos_recuperacion;
+    if (!Array.isArray(codigos) || codigos.length !== 8) {
+      throw new Error("El servidor no devolvió los 8 códigos esperados.");
+    }
+    codigosNuevos.value = codigos;
+    codigoAuthenticator.value = "";
+  } catch (error) {
+    errorSeguridad.value = obtenerError(
+      error,
+      error.message || "No fue posible regenerar los códigos."
+    );
+  } finally {
+    regenerandoCodigos.value = false;
+  }
+}
+
+async function copiarCodigos() {
+  try {
+    await navigator.clipboard.writeText(codigosNuevos.value.join("\n"));
+    avisar("Códigos copiados. Guárdalos en un lugar seguro.");
+  } catch {
+    errorSeguridad.value = "No se pudieron copiar. Guarda los códigos manualmente.";
   }
 }
 
@@ -933,6 +1093,23 @@ button:disabled {
   cursor: pointer;
 }
 
+.perfil-codigos-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.perfil-codigos-grid code {
+  padding: 12px;
+  border: 1px solid #d6e5ef;
+  border-radius: 10px;
+  background: #f3f8fc;
+  color: #11466c;
+  text-align: center;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
 @media (max-width: 760px) {
   .perfil-area {
     padding: 14px;
@@ -958,6 +1135,10 @@ button:disabled {
 
   .perfil-botones-finales {
     flex-wrap: wrap;
+  }
+
+  .perfil-codigos-grid {
+    grid-template-columns: 1fr;
   }
 
   .perfil-modal-cabecera,

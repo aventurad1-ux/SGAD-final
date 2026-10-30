@@ -1,5 +1,10 @@
+import os
+from datetime import datetime, timezone
 
+from app.models.refresh_token import RefreshToken
+from app.services.sesion_service import sesion_vigente
 from flask import Flask
+from app.services.limites_acceso import limiter
 
 from config.config import Config
 from app.extensions import (
@@ -70,6 +75,7 @@ from app.routes.bitacora import (
     bitacora_bp,
 )
 
+from app.routes.seguridad_2fa import seguridad_2fa_bp
 
 def create_app():
     app = Flask(__name__)
@@ -77,6 +83,7 @@ def create_app():
     app.config.from_object(
         Config
     )
+    limiter.init_app(app)
 
     db.init_app(app)
 
@@ -86,15 +93,63 @@ def create_app():
     )
 
     jwt.init_app(app)
+    @jwt.token_in_blocklist_loader
+    def verificar_sesion_jwt(jwt_header, jwt_payload):
+        # Rechazamos tokens anteriores a la
+        # implementación obligatoria del 2FA.
+        if jwt_payload.get("mfa") is not True:
+            return True
+
+        tipo = jwt_payload.get("type")
+
+        if tipo == "refresh":
+            id_sesion = jwt_payload.get("jti")
+        elif tipo == "access":
+            id_sesion = jwt_payload.get("sid")
+        else:
+            return True
+
+        if not id_sesion:
+            return True
+
+        sesion = RefreshToken.query.filter_by(
+            jti=id_sesion
+        ).first()
+
+        if not sesion_vigente(sesion):
+            return True
+
+        if str(sesion.id_usuario) != str(
+            jwt_payload.get("sub")
+        ):
+            return True
+
+        # Una solicitud autenticada válida
+        # actualiza la última actividad.
+        sesion.ultima_actividad = datetime.now(
+            timezone.utc
+        )
+        db.session.commit()
+
+        return False
+
 
     from app import models
+
+    origenes_permitidos = [
+        origen.strip()
+        for origen in os.getenv(
+            "CORS_ORIGINS",
+            "http://localhost:5173,http://127.0.0.1:5173"
+        ).split(",")
+        if origen.strip()
+    ]
 
     cors.init_app(
         app,
         resources={
             r"/api/*": {
-                "origins":
-                    "http://localhost:5173"
+                "origins": origenes_permitidos
             }
         }
     )
@@ -206,5 +261,6 @@ def create_app():
         bitacora_bp
     )
 
-    return app
+    app.register_blueprint(seguridad_2fa_bp)
 
+    return app

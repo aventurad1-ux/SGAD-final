@@ -1,5 +1,7 @@
-
+from app.models.usuario_2fa import Usuario2FA
+from app.services.desafio_2fa import crear_desafio_2fa
 from datetime import datetime, timezone
+from app.services.limites_acceso import limiter
 
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import (
@@ -26,11 +28,12 @@ auth_bp = Blueprint(
 
 
 @auth_bp.post("/login")
+@limiter.limit("5 per minute")
 def login():
     data = request.get_json(silent=True) or {}
 
-    correo = data.get("correo", "").strip().lower()
-    password = data.get("password", "")
+    correo = str(data.get("correo") or "").strip().lower()
+    password = data.get("password") or ""
 
     if not correo or not password:
         return jsonify({
@@ -41,7 +44,13 @@ def login():
         correo=correo
     ).first()
 
-    if not usuario:
+    if (
+        not usuario
+        or not verify_password(
+            usuario.contrasena_hash,
+            password
+        )
+    ):
         return jsonify({
             "message": "Credenciales incorrectas."
         }), 401
@@ -51,64 +60,32 @@ def login():
             "message": "La cuenta se encuentra desactivada."
         }), 403
 
-    if not verify_password(
-        usuario.contrasena_hash,
-        password
-    ):
+    configuracion = db.session.get(
+        Usuario2FA,
+        usuario.id_usuario
+    )
+
+    desafio = crear_desafio_2fa(
+        usuario.id_usuario
+    )
+
+    # Todavía no entregamos JWT de acceso.
+    # El usuario debe completar Google Authenticator.
+    if not configuracion or not configuracion.habilitado:
         return jsonify({
-            "message": "Credenciales incorrectas."
-        }), 401
-
-    claims = {
-        "rol": usuario.rol.nombre
-    }
-
-    access_token = create_access_token(
-        identity=str(usuario.id_usuario),
-        additional_claims=claims
-    )
-
-    refresh_token = create_refresh_token(
-        identity=str(usuario.id_usuario),
-        additional_claims=claims
-    )
-
-    refresh_data = decode_token(refresh_token)
-
-    token_db = RefreshToken(
-        id_usuario=usuario.id_usuario,
-        jti=refresh_data["jti"],
-        fecha_expiracion=datetime.fromtimestamp(
-            refresh_data["exp"],
-            tz=timezone.utc
-        ),
-        direccion_ip=request.remote_addr,
-        user_agent=request.headers.get("User-Agent")
-    )
-
-    db.session.add(token_db)
-
-    registrar_actividad(
-        id_usuario=usuario.id_usuario,
-        accion="INICIAR_SESION",
-        modulo="Autenticacion",
-        descripcion="El usuario inicio sesion correctamente."
-    )
-
-    db.session.commit()
+            "message": "Debe configurar Google Authenticator.",
+            "requires_2fa": True,
+            "requires_setup": True,
+            "desafio": desafio
+        }), 200
 
     return jsonify({
-        "message": "Inicio de sesión exitoso.",
-        "access_token": access_token,
-        "refresh_token": refresh_token,
-        "usuario": {
-            "id_usuario": usuario.id_usuario,
-            "nombres": usuario.nombres,
-            "apellidos": usuario.apellidos,
-            "correo": usuario.correo,
-            "rol": usuario.rol.nombre
-        }
+        "message": "Ingrese el código de Google Authenticator.",
+        "requires_2fa": True,
+        "requires_setup": False,
+        "desafio": desafio
     }), 200
+
 
 
 @auth_bp.post("/refresh")
@@ -136,7 +113,9 @@ def refresh():
         }), 401
 
     claims = {
-        "rol": usuario.rol.nombre
+        "rol": usuario.rol.nombre,
+        "mfa": True,
+        "sid": jti
     }
 
     nuevo_access_token = create_access_token(
@@ -147,6 +126,7 @@ def refresh():
     return jsonify({
         "access_token": nuevo_access_token
     }), 200
+
 
 
 @auth_bp.post("/logout")

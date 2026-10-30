@@ -32,6 +32,12 @@ class RefreshToken(db.Model):
         nullable=False,
         default=lambda: datetime.now(timezone.utc)
     )
+    ultima_actividad = db.Column(
+        db.DateTime(timezone=True),
+        nullable=True,
+        default=lambda: datetime.now(timezone.utc)
+    )
+
 
     fecha_expiracion = db.Column(
         db.DateTime(timezone=True),
